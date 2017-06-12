@@ -15,25 +15,20 @@
 package main
 
 import (
-	//_ "./pkg/auth"
-
-	"fmt"
-
 	auth "github.com/jeffotoni/s3goamz/pkg/auth"
 	"launchpad.net/goamz/s3"
 )
 
 const (
 	Bucket = "name-your-bucket"
-	//Region = aws.USEast
 )
 
 func main() {
 
 	//
-	// GetAuth
+	// GetAuth (region, key, secret)
 	//
-	// connect := auth.GetAuth("xxxxxx-key", "xxxxx-secret")
+	// connect := auth.GetAuth("us-east-1","xxxxxx-key", "xxxxx-secret")
 
 	//
 	// GetAuth
@@ -47,9 +42,9 @@ func main() {
 		Name: Bucket,
 	}
 
-	// bucket := connection.Bucket("teste-user") // change this your bucket name
+	// bucket := connection.Bucket("name-your-bucket") // change this your bucket name
 
-	fmt.Println(conn)
+	//fmt.Println(conn)
 
 	//
 	// File upload..
