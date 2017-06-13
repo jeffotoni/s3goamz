@@ -145,7 +145,7 @@ func main() {
 		//
 		//
 		//
-		//parts := []s3.Part{}
+		parts := []s3.Part{}
 
 		//
 		//
@@ -162,7 +162,14 @@ func main() {
 		//
 		chunkPart := (fileChunk / (1024 * 1024))
 
+		//
+		//
+		//
 		boldRed.Println("File Size:", fileSize, "byte", sizeTotal, "Mb", "Chunk:", chunkPart, "Mb")
+
+		//
+		//
+		//
 		boldYellow.Println("Uploading...")
 
 		//
@@ -198,7 +205,7 @@ func main() {
 			//
 			//
 			//
-			checkErr(errx3)
+			erro.Check(errx3)
 
 			//
 			//
