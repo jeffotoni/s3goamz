@@ -31,8 +31,8 @@ import (
 )
 
 const (
-	Bucket     = "name-your-bucket"
-	FileUpload = "filename.pdf"
+	Bucket     = "name-bucket"
+	FileUpload = "file.pdf"
 )
 
 const (
@@ -67,17 +67,29 @@ func main() {
 	//
 	// connect := auth.GetAuth("xxxxxx-key", "xxxxx-secret")
 
+	// OR
+
 	//
-	// GetAuth
+	// aws/.credentials
+	// GetAuth()
 	//
+	// OR
+	// Getenv(Key) and Getenv(Secrete)
+	// GetAuth()
 	connect := auth.GetAuth()
 
-	//fmt.Println(connect)
-
+	//
+	//
+	//
 	conn := s3.Bucket{
 		S3:   connect,
 		Name: Bucket,
 	}
+
+	//
+	// OR
+	//
+	// bucket := conn.Bucket(Bucket) // change this your bucket name
 
 	if check.Exists(FileUpload) == true {
 
