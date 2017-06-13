@@ -16,6 +16,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"math"
@@ -28,11 +29,6 @@ import (
 	check "github.com/jeffotoni/s3goamz/pkg/check"
 	erro "github.com/jeffotoni/s3goamz/pkg/erro"
 	"launchpad.net/goamz/s3"
-)
-
-const (
-	Bucket     = "name-bucket"
-	FileUpload = "file.pdf"
 )
 
 const (
@@ -62,11 +58,20 @@ func main() {
 	yellow := color.New(color.FgYellow)
 	boldYellow := yellow.Add(color.Bold)
 
-	//command := flag.String("command", "", "The git command")
+	//
+	//
+	//
+	putFlag := flag.String("put", "", "Ex: file.pdf")
 
-	if len(os.Args) < 2 || len(os.Args) > 2 {
+	//
+	//
+	//
+	bucketFlag := flag.String("bucket", "", "Ex: name-bucket")
+
+	if len(os.Args) < 5 || len(os.Args) > 5 {
 
 		boldRed.Println("You must enter the name of the file and bucket you want to send")
+		boldYellow.Println("-put [file.pdf] -bucket [s3-bucket]")
 		os.Exit(0)
 
 	} else if len(os.Args) == 2 {
@@ -74,7 +79,48 @@ func main() {
 		boldRed.Println("ok.")
 	}
 
-	os.Exit(0)
+	flag.Parse()
+
+	//fmt.Printf("putFlag: %s %t\n", *putFlag)
+
+	if *putFlag == "" || *bucketFlag == "" {
+
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+
+	var FileUpload string
+	var Bucket string
+
+	//
+	//
+	//
+	flag.Visit(func(f *flag.Flag) {
+
+		//fmt.Println(f)
+
+		switch f.Name {
+
+		case "put":
+
+			FileUpload = fmt.Sprintf("%s", f.Value)
+
+		case "bucket":
+
+			Bucket = fmt.Sprintf("%s", f.Value)
+
+		default:
+			flag.PrintDefaults()
+
+		}
+	})
+
+	//fmt.Println("Flags: ", len(os.Args))
+
+	strcommand := "start upload to [ -put " + FileUpload + " -bucket " + Bucket + " ]"
+
+	boldYellow.Println(strcommand)
+
 	//
 	// GetAuth (key, secret)
 	//
