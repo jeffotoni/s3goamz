@@ -64,6 +64,13 @@ func GetAuth(parameter ...string) *s3.S3 {
 
 			AccessKey = os.Getenv("AWS_ACCESS_KEY_ID")
 			SecretKey = os.Getenv("AWS_SECRET_ACCESS_KEY")
+
+			if AccessKey == "" && SecretKey == "" {
+
+				fmt.Println("Error I could not find your aws keys!")
+				os.Exit(0)
+			}
+
 		}
 
 	} else {

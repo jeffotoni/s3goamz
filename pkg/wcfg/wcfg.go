@@ -125,6 +125,15 @@ func ReadFileInto(C *Credentials, pconf string) error {
 
 					C.Secret = strings.TrimSpace(vetor[1])
 				}
+			} else if keys == "source_profile" {
+
+				//
+				// [default]
+				// source_profile = default
+				//
+				// Try to catch default aws per instance
+				//
+
 			}
 		}
 
