@@ -22,7 +22,9 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	auth "github.com/jeffotoni/s3goamz/pkg/auth"
@@ -280,10 +282,49 @@ func main() {
 		//
 		boldYellow.Println("Uploading...")
 
+		go func() {
+			sc := make(chan os.Signal, 1)
+			signal.Notify(sc, os.Interrupt)
+
+			<-sc
+
+			fmt.Println("\ncanceled!")
+			fmt.Print("\033[?25h")
+			os.Exit(0)
+		}()
+
+		fmt.Print("\033[?25l")
+
+		timer := time.Tick(time.Duration(150) * time.Millisecond)
+
+		s := []rune(`|/~\`)
+		//s := []rune(`-=*=`)
+		//s := []rune(`◐◓◑◒`)
+		i := 0
+
+		go func() {
+			for {
+
+				<-timer
+
+				fmt.Print("\r")
+				fmt.Print(string(s[i]))
+
+				i++
+
+				if i == len(s) {
+					i = 0
+				}
+			}
+		}()
+
+		//go func() {
 		//
 		//
 		//
 		for i := uint64(0); i < totalPartsNum; i++ {
+
+			<-timer
 
 			//
 			//
@@ -325,6 +366,7 @@ func main() {
 			//
 			parts = append(parts, piece)
 		}
+		//}()
 
 		//
 		//
@@ -336,11 +378,11 @@ func main() {
 		//
 		erro.Check(err)
 
-		boldYellow.Println("\n\nPutPart upload completed")
+		boldYellow.Println("\n\nUpload completed...")
 
 	} else {
 
-		boldRed.Println("Erro, File does not exist!")
+		boldRed.Println("Erro, File [" + FileUpload + "]does not exist!")
 		os.Exit(0)
 	}
 
