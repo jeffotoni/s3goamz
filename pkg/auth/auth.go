@@ -57,6 +57,15 @@ func GetAuth(parameter ...string) *s3.S3 {
 		//
 		AccessKey, SecretKey = wcfg.AwsKeys()
 
+		//
+		// get Env
+		//
+		if AccessKey == "error key" && SecretKey == "error Secret" {
+
+			AccessKey: os.Getenv("AWS_ACCESS_KEY_ID"),
+  			SecretKey: os.Getenv("AWS_SECRET_ACCESS_KEY"),
+		}
+
 	} else {
 
 		fmt.Println("Error de parameter!!")
