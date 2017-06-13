@@ -76,6 +76,11 @@ func main() {
 	//
 	bucketFlag := flag.String("bucket", "", "Ex: name-bucket")
 
+	//
+	//
+	//
+	cryFlag := flag.String("crypt", "", "Exs: des/rsa/md5")
+
 	if len(os.Args) < 5 || len(os.Args) > 5 {
 
 		boldRed.Println("You must enter the name of the file and bucket you want to send")
