@@ -62,24 +62,38 @@ func main() {
 	yellow := color.New(color.FgYellow)
 	boldYellow := yellow.Add(color.Bold)
 
+	//command := flag.String("command", "", "The git command")
+
+	if len(os.Args) < 2 || len(os.Args) > 2 {
+
+		boldRed.Println("You must enter the name of the file and bucket you want to send")
+		os.Exit(0)
+
+	} else if len(os.Args) == 2 {
+
+		boldRed.Println("ok.")
+	}
+
+	os.Exit(0)
 	//
 	// GetAuth (key, secret)
 	//
 	// connect := auth.GetAuth("xxxxxx-key", "xxxxx-secret")
-
+	//
 	// OR
-
 	//
 	// aws/.credentials
 	// GetAuth()
 	//
 	// OR
+	//
 	// Getenv(Key) and Getenv(Secrete)
 	// GetAuth()
+	//
 	connect := auth.GetAuth()
 
 	//
-	//
+	// s3.Bucket
 	//
 	conn := s3.Bucket{
 		S3:   connect,
