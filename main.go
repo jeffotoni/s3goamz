@@ -20,6 +20,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/fatih/color"
 	auth "github.com/jeffotoni/s3goamz/pkg/auth"
 	check "github.com/jeffotoni/s3goamz/pkg/check"
 	err "github.com/jeffotoni/s3goamz/pkg/err"
@@ -42,6 +43,11 @@ const (
 
 const (
 	fileChunk = 5 * (1 << 20) // 5MB
+)
+
+const (
+	red     = color.New(color.FgRed)
+	boldRed = red.Add(color.Bold)
 )
 
 func main() {
@@ -129,7 +135,15 @@ func main() {
 		//
 		//
 		//
-		parts := []s3.Part{}
+		//parts := []s3.Part{}
+
+		//
+		//
+		//
+		//HeaderPart := strings.NewReader(string(bytes))
+
+		//boldRed.Println("File Size:", fileSize, "byte", sizeTotal, "Mb")
+		boldRed.Println("Uploading...")
 
 	} else {
 

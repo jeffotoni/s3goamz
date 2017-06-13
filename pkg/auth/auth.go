@@ -62,8 +62,8 @@ func GetAuth(parameter ...string) *s3.S3 {
 		//
 		if AccessKey == "error key" && SecretKey == "error Secret" {
 
-			AccessKey: os.Getenv("AWS_ACCESS_KEY_ID"),
-  			SecretKey: os.Getenv("AWS_SECRET_ACCESS_KEY"),
+			AccessKey = os.Getenv("AWS_ACCESS_KEY_ID")
+			SecretKey = os.Getenv("AWS_SECRET_ACCESS_KEY")
 		}
 
 	} else {
