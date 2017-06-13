@@ -20,6 +20,8 @@ import (
 	"os"
 	"runtime"
 	"strings"
+
+	check "github.com/jeffotoni/s3goamz/pkg/check"
 )
 
 type Credentials struct {
@@ -80,7 +82,7 @@ func GetConfig() *Credentials {
 	// file exist ?
 	//
 
-	if Exists(pconf) == true {
+	if check.Exists(pconf) == true {
 
 		if err = ReadFileInto(&cfg, pconf); err != nil {
 			log.Fatal(err)
@@ -132,13 +134,6 @@ func ReadFileInto(C *Credentials, pconf string) error {
 
 		return errx
 	}
-}
-
-func Exists(fileName string) bool {
-
-	_, err := os.Stat(fileName)
-
-	return !os.IsNotExist(err)
 }
 
 func UserHomeDir() string {
