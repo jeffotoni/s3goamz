@@ -16,6 +16,7 @@ package main
 
 import (
 	"bufio"
+	"math"
 	"net/http"
 	"os"
 
@@ -37,6 +38,10 @@ const (
 	AuthenticatedRead = s3.ACL("authenticated-read")
 	BucketOwnerRead   = s3.ACL("bucket-owner-read")
 	BucketOwnerFull   = s3.ACL("bucket-owner-full-control")
+)
+
+const (
+	fileChunk = 5 * (1 << 20) // 5MB
 )
 
 func main() {
@@ -77,6 +82,12 @@ func main() {
 		//
 		fileSize := fileInfo.Size()
 
+		if fileSize < fileChunk {
+
+			fmt.Prinln("Error, The file has to be larger than 5mb to send in parts to amazon s3.")
+			os.Exit(0)
+
+		}
 		//
 		//
 		//
@@ -101,14 +112,24 @@ func main() {
 		filetype := http.DetectContentType(bytes)
 
 		//
-		// Private           = ACL("private")
-		// PublicRead        = ACL("public-read")
-		// PublicReadWrite   = ACL("public-read-write")
-		// AuthenticatedRead = ACL("authenticated-read")
-		// BucketOwnerRead   = ACL("bucket-owner-read")
-		// BucketOwnerFull   = ACL("bucket-owner-full-control")
-		// set up for multipart upload
-		multi, err := conn.InitMulti("/"+FileUpload, filetype, BucketOwnerRead)
+		//
+		//
+		multi, errx := conn.InitMulti("/"+FileUpload, filetype, BucketOwnerRead)
+
+		//
+		//
+		//
+		check.checkErr(errx)
+
+		//
+		//
+		//
+		totalPartsNum := uint64(math.Ceil(float64(fileSize) / float64(fileChunk)))
+
+		//
+		//
+		//
+		parts := []s3.Part{}
 
 	} else {
 
