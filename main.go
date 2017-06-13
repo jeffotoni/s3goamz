@@ -49,6 +49,12 @@ func main() {
 	//
 	//
 	//
+	white := color.New(color.FgWhite)
+	boldWhite := white.Add(color.Bold)
+
+	//
+	//
+	//
 	red := color.New(color.FgRed)
 	boldRed := red.Add(color.Bold)
 
@@ -105,6 +111,10 @@ func main() {
 
 			FileUpload = fmt.Sprintf("%s", f.Value)
 
+			//
+			// if /dir/dir/file
+			//
+
 		case "bucket":
 
 			Bucket = fmt.Sprintf("%s", f.Value)
@@ -117,7 +127,33 @@ func main() {
 
 	//fmt.Println("Flags: ", len(os.Args))
 
-	strcommand := "start upload to [ -put " + FileUpload + " -bucket " + Bucket + " ]"
+	//
+	// if "/" remove / , only the file name
+	// FileUpload
+	//
+
+	var lastValue string
+
+	//
+	//
+	//
+	vetSplit := strings.Split(FileUpload, "/")
+
+	//
+	//
+	//
+	sizeVet := len(vetSplit)
+
+	if sizeVet > 0 {
+
+		lastValue = vetSplit[sizeVet-1]
+
+	} else {
+
+		lastValue = FileUpload
+	}
+
+	strcommand := "start upload to [ -put " + lastValue + " -bucket " + Bucket + " ]"
 
 	boldYellow.Println(strcommand)
 
@@ -282,7 +318,7 @@ func main() {
 			//
 			//
 			//
-			fmt.Printf("Processing %d piece of %d and uploaded %d bytes.\n ", int(i), int(totalPartsNum), int(sizePart))
+			boldWhite.Printf("Processing %d piece of %d and uploaded %d bytes.\n ", int(i), int(totalPartsNum), int(sizePart))
 
 			//
 			//
