@@ -12,7 +12,7 @@
 *
  */
 
-package err
+package erro
 
 import (
 	"fmt"
@@ -22,7 +22,7 @@ import (
 //
 //
 //
-func checkErr(err error) {
+func Check(err error) {
 
 	if err != nil {
 

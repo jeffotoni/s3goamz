@@ -16,14 +16,17 @@ package main
 
 import (
 	"bufio"
+	"fmt"
+	"io"
 	"math"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/fatih/color"
 	auth "github.com/jeffotoni/s3goamz/pkg/auth"
 	check "github.com/jeffotoni/s3goamz/pkg/check"
-	err "github.com/jeffotoni/s3goamz/pkg/err"
+	erro "github.com/jeffotoni/s3goamz/pkg/erro"
 	"launchpad.net/goamz/s3"
 )
 
@@ -45,12 +48,19 @@ const (
 	fileChunk = 5 * (1 << 20) // 5MB
 )
 
-const (
-	red     = color.New(color.FgRed)
-	boldRed = red.Add(color.Bold)
-)
-
 func main() {
+
+	//
+	//
+	//
+	red := color.New(color.FgRed)
+	boldRed := red.Add(color.Bold)
+
+	//
+	//
+	//
+	yellow := color.New(color.FgYellow)
+	boldYellow := yellow.Add(color.Bold)
 
 	//
 	// GetAuth (key, secret)
@@ -74,8 +84,8 @@ func main() {
 		//
 		//
 		//
-		file, erro := os.Open(FileUpload)
-		err.checkErr(erro)
+		file, errx := os.Open(FileUpload)
+		erro.Check(errx)
 		defer file.Close()
 
 		//
@@ -90,7 +100,7 @@ func main() {
 
 		if fileSize < fileChunk {
 
-			fmt.Prinln("Error, The file has to be larger than 5mb to send in parts to amazon s3.")
+			fmt.Println("Error, The file has to be larger than 5mb to send in parts to amazon s3.")
 			os.Exit(0)
 
 		}
@@ -105,12 +115,12 @@ func main() {
 		//
 		//
 		//
-		_, erro = buffer.Read(bytes)
+		_, errx = buffer.Read(bytes)
 
 		//
 		//
 		//
-		err.checkErr(erro)
+		erro.Check(errx)
 
 		//
 		//
@@ -120,12 +130,12 @@ func main() {
 		//
 		//
 		//
-		multi, errx := conn.InitMulti("/"+FileUpload, filetype, BucketOwnerRead)
+		multi, err := conn.InitMulti("/"+FileUpload, filetype, BucketOwnerRead)
 
 		//
 		//
 		//
-		check.checkErr(errx)
+		erro.Check(err)
 
 		//
 		//
@@ -140,14 +150,82 @@ func main() {
 		//
 		//
 		//
-		//HeaderPart := strings.NewReader(string(bytes))
+		HeaderPart := strings.NewReader(string(bytes))
 
-		//boldRed.Println("File Size:", fileSize, "byte", sizeTotal, "Mb")
-		boldRed.Println("Uploading...")
+		//
+		//
+		//
+		sizeTotal := (fileSize / (1024 * 1024))
+
+		//
+		//
+		//
+		chunkPart := (fileChunk / (1024 * 1024))
+
+		boldRed.Println("File Size:", fileSize, "byte", sizeTotal, "Mb", "Chunk:", chunkPart, "Mb")
+		boldYellow.Println("Uploading...")
+
+		//
+		//
+		//
+		for i := uint64(0); i < totalPartsNum; i++ {
+
+			//
+			//
+			//
+			partSize := int(math.Min(fileChunk, float64(fileSize-int64(i*fileChunk))))
+
+			//
+			//
+			//
+			partBuffer := make([]byte, partSize)
+
+			//
+			//
+			//
+			sizePart, errx2 := io.ReadFull(HeaderPart, partBuffer)
+
+			//
+			//
+			//
+			erro.Check(errx2)
+
+			//
+			//
+			//
+			piece, errx3 := multi.PutPart(int(i)+1, strings.NewReader(string(partBuffer))) // write to S3 bucket part by part
+
+			//
+			//
+			//
+			checkErr(errx3)
+
+			//
+			//
+			//
+			fmt.Printf("Processing %d piece of %d and uploaded %d bytes.\n ", int(i), int(totalPartsNum), int(sizePart))
+
+			//
+			//
+			//
+			parts = append(parts, piece)
+		}
+
+		//
+		//
+		//
+		err = multi.Complete(parts)
+
+		//
+		//
+		//
+		erro.Check(err)
+
+		boldYellow.Println("\n\nPutPart upload completed")
 
 	} else {
 
-		fmt.Prinln("Erro, File does not exist!")
+		boldRed.Println("Erro, File does not exist!")
 		os.Exit(0)
 	}
 
