@@ -240,7 +240,7 @@ func main() {
 		//
 		//
 		//
-		multi, err := conn.InitMulti("/"+FileUpload, filetype, BucketOwnerRead)
+		multi, err := conn.InitMulti(FileUpload, filetype, BucketOwnerRead)
 
 		//
 		//
@@ -280,7 +280,7 @@ func main() {
 		//
 		//
 		//
-		boldYellow.Println("Uploading...")
+		boldYellow.Println("Uploading by Parts...")
 
 		go func() {
 			sc := make(chan os.Signal, 1)
@@ -288,7 +288,7 @@ func main() {
 
 			<-sc
 
-			fmt.Println("\ncanceled!")
+			boldRed.Println("\ncanceled!")
 			fmt.Print("\033[?25h")
 			os.Exit(0)
 		}()
@@ -308,7 +308,7 @@ func main() {
 				<-timer
 
 				fmt.Print("\r")
-				fmt.Print(string(s[i]))
+				boldWhite.Print(string(s[i]))
 
 				i++
 
