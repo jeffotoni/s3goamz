@@ -79,7 +79,9 @@ func main() {
 	//
 	//
 	//
-	cryFlag := flag.String("crypt", "", "Exs: des/rsa/md5")
+	//cryFlag := flag.String("crypt", "", "Exs: des/rsa/md5")
+
+	// cryFlag
 
 	if len(os.Args) < 5 || len(os.Args) > 5 {
 
@@ -360,6 +362,7 @@ func main() {
 			//
 			erro.Check(errx3)
 
+			fmt.Print("\r")
 			//
 			//
 			//
@@ -381,6 +384,7 @@ func main() {
 		//
 		erro.Check(err)
 
+		fmt.Print("\033[?25h")
 		boldYellow.Println("\n\nUpload completed...")
 
 	} else {
