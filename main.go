@@ -295,7 +295,7 @@ func main() {
 
 		fmt.Print("\033[?25l")
 
-		timer := time.Tick(time.Duration(150) * time.Millisecond)
+		timer := time.Tick(time.Duration(50) * time.Millisecond)
 
 		s := []rune(`|/~\`)
 		//s := []rune(`-=*=`)
@@ -318,7 +318,6 @@ func main() {
 			}
 		}()
 
-		//go func() {
 		//
 		//
 		//
@@ -366,7 +365,6 @@ func main() {
 			//
 			parts = append(parts, piece)
 		}
-		//}()
 
 		//
 		//
@@ -385,7 +383,4 @@ func main() {
 		boldRed.Println("Erro, File [" + FileUpload + "]does not exist!")
 		os.Exit(0)
 	}
-
-	// bucket := connection.Bucket("name-your-bucket") // change this your bucket name
-
 }
