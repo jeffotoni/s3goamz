@@ -26,9 +26,9 @@ const (
 func main() {
 
 	//
-	// GetAuth (region, key, secret)
+	// GetAuth (key, secret)
 	//
-	// connect := auth.GetAuth("us-east-1","xxxxxx-key", "xxxxx-secret")
+	// connect := auth.GetAuth("xxxxxx-key", "xxxxx-secret")
 
 	//
 	// GetAuth
