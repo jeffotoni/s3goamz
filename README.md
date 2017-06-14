@@ -25,9 +25,16 @@ go get github.com/fatih/color
 go get github.com/jeffotoni/s3goamz
 
 
-# SetProfile is required
+# Permissions with ACL
 
 ```go
+
+Private           = s3.ACL("private")
+PublicRead        = s3.ACL("public-read")
+PublicReadWrite   = s3.ACL("public-read-write")
+AuthenticatedRead = s3.ACL("authenticated-read")
+BucketOwnerRead   = s3.ACL("bucket-owner-read")
+BucketOwnerFull   = s3.ACL("bucket-owner-full-control")
 
 ```
 

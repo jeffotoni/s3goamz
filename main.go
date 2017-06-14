@@ -89,7 +89,12 @@ func main() {
 	//
 	//
 	//
-	flag.String("crypt", "des", "Exs: des/rsa/md5")
+	flag.String("crypt", "des", "Exs: des|rsa|md5")
+
+	//
+	//
+	//
+	flag.String("acl", "read", "Ex: read|write|all")
 
 	//
 	//
@@ -115,8 +120,22 @@ func main() {
 		os.Exit(0)
 	}
 
+	//
+	//
+	//
 	var stringCmd string
+
+	//
+	//
+	//
 	var stringCmd2 string
+
+	//
+	//
+	//
+	var stringAcl string
+
+	stringAcl = ""
 
 	//
 	// Validate hidden flags
@@ -151,7 +170,14 @@ func main() {
 		case "crypt":
 
 			fmt.Println("crypt here...")
+			os.Exit(0)
 
+		case "acl":
+
+			//
+			// validar se existe
+			//
+			stringAcl = stringCmd2
 			os.Exit(0)
 
 		case "version":
@@ -210,7 +236,7 @@ func main() {
 		lastValue = FileUpload
 	}
 
-	strcommand := "start upload to [ -put " + lastValue + " -bucket " + Bucket + " ]"
+	strcommand := "start upload to [ --put " + lastValue + " --bucket " + Bucket + " ]"
 
 	boldYellow.Println(strcommand)
 
