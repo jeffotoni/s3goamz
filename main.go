@@ -48,7 +48,15 @@ const (
 
 func main() {
 
+	//
+	//
+	//
 	stringAcl := BucketOwnerRead
+
+	//
+	//
+	//
+	stringAclTmp := "read"
 
 	//
 	//
@@ -174,7 +182,7 @@ func main() {
 			stringCmd2 = strings.TrimSpace(stringCmd2)
 			stringCmd2 = strings.ToLower(stringCmd2)
 
-			stringAclTmp := fmt.Sprintf("%s", stringCmd2)
+			stringAclTmp = fmt.Sprintf("%s", stringCmd2)
 
 			if stringAclTmp == "read" {
 
@@ -251,7 +259,7 @@ func main() {
 		lastValue = FileUpload
 	}
 
-	strcommand := "start upload to [ --put " + lastValue + " --bucket " + Bucket + " ]"
+	strcommand := "start upload to [ --put " + lastValue + " --bucket " + Bucket + " --acl " + stringAclTmp + "]"
 
 	boldYellow.Println(strcommand)
 
