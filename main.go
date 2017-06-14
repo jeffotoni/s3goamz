@@ -48,6 +48,8 @@ const (
 
 func main() {
 
+	stringAcl := BucketOwnerRead
+
 	//
 	//
 	//
@@ -131,19 +133,13 @@ func main() {
 	var stringCmd2 string
 
 	//
-	//
-	//
-	var stringAcl string
-
-	stringAcl = ""
-
-	//
 	// Validate hidden flags
 	//
 	for x := range os.Args {
 
 		stringCmd = strings.Trim(os.Args[x], "-")
 		stringCmd = strings.TrimSpace(stringCmd)
+		stringCmd = strings.ToLower(stringCmd)
 
 		//fmt.Println("args: ", sizeArgs, " ", x)
 
@@ -174,11 +170,30 @@ func main() {
 
 		case "acl":
 
-			//
-			// validar se existe
-			//
-			stringAcl = stringCmd2
-			os.Exit(0)
+			stringCmd2 = strings.Trim(os.Args[x+1], "-")
+			stringCmd2 = strings.TrimSpace(stringCmd2)
+			stringCmd2 = strings.ToLower(stringCmd2)
+
+			stringAclTmp := fmt.Sprintf("%s", stringCmd2)
+
+			if stringAclTmp == "read" {
+
+				stringAcl = BucketOwnerRead
+
+			} else if stringAclTmp == "write" {
+
+				stringAcl = PublicReadWrite
+
+			} else if stringAclTmp == "all" {
+
+				stringAcl = BucketOwnerFull
+
+			} else {
+
+				boldYellow.Println("Acl does not exist! Try red | write | all")
+				os.Exit(0)
+
+			}
 
 		case "version":
 
@@ -321,7 +336,7 @@ func main() {
 		//
 		//
 		//
-		multi, err := conn.InitMulti(FileUpload, filetype, BucketOwnerRead)
+		multi, err := conn.InitMulti(FileUpload, filetype, stringAcl)
 
 		//
 		//
