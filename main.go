@@ -76,8 +76,6 @@ func main() {
 	//
 	var Bucket string
 
-	//f := flag.NewFlagSet("flag", flag.ExitOnError)
-
 	//
 	//
 	//
@@ -188,82 +186,9 @@ func main() {
 		os.Exit(0)
 	}
 
-	os.Exit(0)
-
 	//
 	//
 	//
-	//
-	//flag.Parse()
-
-	//askCommand.Parse(os.Args[2:])
-
-	fmt.Println("narg: ", flag.NArg())
-	fmt.Println("nflag: ", flag.NFlag())
-	fmt.Println("agrs: ", flag.Args())
-
-	os.Exit(0)
-	//
-	//
-	//
-	flag.Visit(func(f *flag.Flag) {
-
-		fmt.Println("entrei...")
-		os.Exit(0)
-
-		switch f.Name {
-
-		case "put":
-
-			FileUpload = fmt.Sprintf("%s", f.Value)
-
-			//
-			// if /dir/dir/file
-			//
-
-		case "bucket":
-
-			Bucket = fmt.Sprintf("%s", f.Value)
-
-		case "crypt":
-
-			fmt.Println("crypt here...")
-			os.Exit(0)
-
-		default:
-			flag.PrintDefaults()
-			os.Exit(0)
-
-		}
-	})
-
-	if len(os.Args) <= 2 {
-
-		flag.PrintDefaults()
-		os.Exit(0)
-	}
-
-	//fmt.Println(len(os.Args))
-	// < 5 || len(os.Args) > 5
-	if len(os.Args) <= 1 {
-
-		// boldRed.Println("You must enter the name of the file and bucket you want to send")
-		// boldYellow.Println("-put [file.pdf] -bucket [s3-bucket]")
-		flag.PrintDefaults()
-		os.Exit(0)
-
-	} else if len(os.Args) == 2 {
-
-		boldRed.Println("ok.")
-	}
-
-	//fmt.Println("Flags: ", len(os.Args))
-
-	//
-	// if "/" remove / , only the file name
-	// FileUpload
-	//
-
 	var lastValue string
 
 	//
