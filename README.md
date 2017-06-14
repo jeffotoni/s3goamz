@@ -16,9 +16,14 @@ The authentication method is done right in the code we will encapsulate to get t
 
 # Install
 
-go get "launchpad.net/goamz/aws"
+go get launchpad.net/goamz/aws
 
-go get "launchpad.net/goamz/s3"
+go get launchpad.net/goamz/s3
+
+go get github.com/fatih/color
+
+go get github.com/jeffotoni/s3goamz
+
 
 # SetProfile is required
 
@@ -30,6 +35,52 @@ go get "launchpad.net/goamz/s3"
 
 ```go
 
+go run main.go --put ~/Downloads/ex2.pdf --bucket name-bucket
 
 ```
 
+# Example 2 of submission
+
+```go
+
+go run main.go -put ~/Downloads/ex2.pdf -bucket name-bucket
+
+```
+
+# Example 3 of submission
+
+```go
+
+go run main.go --version
+
+```
+
+# Example 4 of submission
+
+```go
+
+go run main.go -v
+
+```
+
+
+# Example 5 of submission
+
+```go
+
+go run main.go --help
+
+```
+
+# Example 6 of submission
+
+```go
+
+  -bucket string
+    	Ex: name-bucket
+  -crypt string
+    	Exs: des/rsa/md5 (default "des")
+  -put string
+    	Ex: file.pdf
+
+```
