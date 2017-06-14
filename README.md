@@ -25,20 +25,7 @@ go get github.com/fatih/color
 go get github.com/jeffotoni/s3goamz
 
 
-# Permissions with ACL
-
-```go
-
-Private           = s3.ACL("private")
-PublicRead        = s3.ACL("public-read")
-PublicReadWrite   = s3.ACL("public-read-write")
-AuthenticatedRead = s3.ACL("authenticated-read")
-BucketOwnerRead   = s3.ACL("bucket-owner-read")
-BucketOwnerFull   = s3.ACL("bucket-owner-full-control")
-
-```
-
-# Example 1 of submission
+# Example 1
 
 ```go
 
@@ -46,7 +33,7 @@ go run main.go --put ~/Downloads/ex2.pdf --bucket name-bucket
 
 ```
 
-# Example 2 of submission
+# Example 2 
 
 ```go
 
@@ -54,7 +41,7 @@ go run main.go -put ~/Downloads/ex2.pdf -bucket name-bucket
 
 ```
 
-# Example 3 of submission
+# Example 3 
 
 ```go
 
@@ -62,7 +49,7 @@ go run main.go --version
 
 ```
 
-# Example 4 of submission
+# Example 4 
 
 ```go
 
@@ -71,7 +58,7 @@ go run main.go -v
 ```
 
 
-# Example 5 of submission
+# Example 5 
 
 ```go
 
@@ -79,14 +66,16 @@ go run main.go --help
 
 ```
 
-# Example 6 of submission
+# Example 6 
 
 ```go
 
+   -acl string
+    	Ex: read|write|all (default "read")
   -bucket string
     	Ex: name-bucket
   -crypt string
-    	Exs: des/rsa/md5 (default "des")
+    	Exs: des|rsa|md5 (default "des")
   -put string
     	Ex: file.pdf
 
