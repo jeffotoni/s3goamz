@@ -30,7 +30,7 @@ go build s3goamz.go
 
 ```go
 
-go run s3goamz.go --put ~/Downloads/ex2.pdf --bucket name-bucket
+s3goamz --put ~/Downloads/ex2.pdf --bucket name-bucket
 
 ```
 
@@ -38,7 +38,7 @@ go run s3goamz.go --put ~/Downloads/ex2.pdf --bucket name-bucket
 
 ```go
 
-go run s3goamz.go -put ~/Downloads/ex2.pdf -bucket name-bucket
+s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket
 
 ```
 
@@ -46,7 +46,7 @@ go run s3goamz.go -put ~/Downloads/ex2.pdf -bucket name-bucket
 
 ```go
 
-go run s3goamz.go --version
+s3goamz --version
 
 ```
 
@@ -54,7 +54,7 @@ go run s3goamz.go --version
 
 ```go
 
-go run s3goamz.go -v
+s3goamz -v
 
 ```
 
@@ -63,7 +63,7 @@ go run s3goamz.go -v
 
 ```go
 
-go run s3goamz.go --help
+s3goamz --help
 
 ```
 
