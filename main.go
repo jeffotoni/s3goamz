@@ -110,6 +110,7 @@ func main() {
 	// --help
 	// -h
 	// --h
+	//
 	if sizeArgs <= 1 {
 
 		flag.PrintDefaults()
@@ -125,9 +126,10 @@ func main() {
 	for x := range os.Args {
 
 		stringCmd = strings.Trim(os.Args[x], "-")
-		stringCmd = strings.TrimSpace(os.Args[x])
+		stringCmd = strings.TrimSpace(stringCmd)
 
-		//fmt.Println("args: ", stringCmd)
+		//fmt.Println("args: ", sizeArgs, " ", x)
+
 		switch stringCmd {
 
 		case "put":
@@ -151,6 +153,17 @@ func main() {
 		case "crypt":
 
 			fmt.Println("crypt here...")
+
+			os.Exit(0)
+
+		case "version":
+
+			boldYellow.Println("v.1.0")
+			os.Exit(0)
+
+		case "v":
+
+			boldYellow.Println("v.1.0")
 			os.Exit(0)
 
 		case "help":
@@ -158,10 +171,21 @@ func main() {
 			flag.PrintDefaults()
 			os.Exit(0)
 
-		default:
+		case "h":
+
 			flag.PrintDefaults()
 			os.Exit(0)
+
+		default:
+			//flag.PrintDefaults()
+			//os.Exit(0)
 		}
+	}
+
+	if stringCmd2 == "" {
+
+		flag.PrintDefaults()
+		os.Exit(0)
 	}
 
 	os.Exit(0)
