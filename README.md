@@ -24,12 +24,13 @@ go get github.com/fatih/color
 
 go get github.com/jeffotoni/s3goamz
 
+go build s3goamz.go
 
 # Example 1
 
 ```go
 
-go run main.go --put ~/Downloads/ex2.pdf --bucket name-bucket
+go run s3goamz.go --put ~/Downloads/ex2.pdf --bucket name-bucket
 
 ```
 
@@ -37,7 +38,7 @@ go run main.go --put ~/Downloads/ex2.pdf --bucket name-bucket
 
 ```go
 
-go run main.go -put ~/Downloads/ex2.pdf -bucket name-bucket
+go run s3goamz.go -put ~/Downloads/ex2.pdf -bucket name-bucket
 
 ```
 
@@ -45,7 +46,7 @@ go run main.go -put ~/Downloads/ex2.pdf -bucket name-bucket
 
 ```go
 
-go run main.go --version
+go run s3goamz.go --version
 
 ```
 
@@ -53,7 +54,7 @@ go run main.go --version
 
 ```go
 
-go run main.go -v
+go run s3goamz.go -v
 
 ```
 
@@ -62,7 +63,7 @@ go run main.go -v
 
 ```go
 
-go run main.go --help
+go run s3goamz.go --help
 
 ```
 
