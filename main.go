@@ -69,50 +69,123 @@ func main() {
 	//
 	//
 	//
-	putFlag := flag.String("put", "", "Ex: file.pdf")
+	var FileUpload string
 
 	//
 	//
 	//
-	bucketFlag := flag.String("bucket", "", "Ex: name-bucket")
+	var Bucket string
+
+	//f := flag.NewFlagSet("flag", flag.ExitOnError)
 
 	//
 	//
 	//
-	//cryFlag := flag.String("crypt", "", "Exs: des/rsa/md5")
+	flag.String("put", "", "Ex: file.pdf")
 
-	// cryFlag
+	//
+	//
+	//
+	flag.String("bucket", "", "Ex: name-bucket")
 
-	if len(os.Args) < 5 || len(os.Args) > 5 {
+	//
+	//
+	//
+	flag.String("crypt", "des", "Exs: des/rsa/md5")
 
-		boldRed.Println("You must enter the name of the file and bucket you want to send")
-		boldYellow.Println("-put [file.pdf] -bucket [s3-bucket]")
-		os.Exit(0)
+	//
+	//
+	//
+	sizeArgs := len(os.Args)
 
-	} else if len(os.Args) == 2 {
-
-		boldRed.Println("ok.")
-	}
-
-	flag.Parse()
-
-	//fmt.Printf("putFlag: %s %t\n", *putFlag)
-
-	if *putFlag == "" || *bucketFlag == "" {
+	//
+	// Validate flags
+	// and Validate hidden flags
+	// --v
+	// -v
+	// --version
+	// -version
+	//
+	// -help
+	// --help
+	// -h
+	// --h
+	if sizeArgs <= 1 {
 
 		flag.PrintDefaults()
 		os.Exit(0)
 	}
 
-	var FileUpload string
-	var Bucket string
+	var stringCmd string
+	var stringCmd2 string
 
+	//
+	// Validate hidden flags
+	//
+	for x := range os.Args {
+
+		stringCmd = strings.Trim(os.Args[x], "-")
+		stringCmd = strings.TrimSpace(os.Args[x])
+
+		//fmt.Println("args: ", stringCmd)
+		switch stringCmd {
+
+		case "put":
+
+			stringCmd2 = strings.Trim(os.Args[x+1], "-")
+			stringCmd2 = strings.TrimSpace(stringCmd2)
+			FileUpload = fmt.Sprintf("%s", stringCmd2)
+			fmt.Println("put: ", stringCmd2)
+
+			//
+			// if /dir/dir/file
+			//
+
+		case "bucket":
+
+			stringCmd2 = strings.Trim(os.Args[x+1], "-")
+			stringCmd2 = strings.TrimSpace(stringCmd2)
+			Bucket = fmt.Sprintf("%s", stringCmd2)
+			fmt.Println("Bucket: ", stringCmd2)
+
+		case "crypt":
+
+			fmt.Println("crypt here...")
+			os.Exit(0)
+
+		case "help":
+
+			flag.PrintDefaults()
+			os.Exit(0)
+
+		default:
+			flag.PrintDefaults()
+			os.Exit(0)
+		}
+	}
+
+	os.Exit(0)
+
+	//
+	//
+	//
+	//
+	//flag.Parse()
+
+	//askCommand.Parse(os.Args[2:])
+
+	fmt.Println("narg: ", flag.NArg())
+	fmt.Println("nflag: ", flag.NFlag())
+	fmt.Println("agrs: ", flag.Args())
+
+	os.Exit(0)
 	//
 	//
 	//
 	flag.Visit(func(f *flag.Flag) {
 
-		//fmt.Println(f)
+		fmt.Println("entrei...")
+		os.Exit(0)
 
 		switch f.Name {
 
@@ -128,11 +201,37 @@ func main() {
 
 			Bucket = fmt.Sprintf("%s", f.Value)
 
+		case "crypt":
+
+			fmt.Println("crypt here...")
+			os.Exit(0)
+
 		default:
 			flag.PrintDefaults()
+			os.Exit(0)
 
 		}
 	})
+
+	if len(os.Args) <= 2 {
+
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+
+	//fmt.Println(len(os.Args))
+	// < 5 || len(os.Args) > 5
+	if len(os.Args) <= 1 {
+
+		// boldRed.Println("You must enter the name of the file and bucket you want to send")
+		// boldYellow.Println("-put [file.pdf] -bucket [s3-bucket]")
+		flag.PrintDefaults()
+		os.Exit(0)
+
+	} else if len(os.Args) == 2 {
+
+		boldRed.Println("ok.")
+	}
 
 	//fmt.Println("Flags: ", len(os.Args))
 
