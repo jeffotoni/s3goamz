@@ -158,7 +158,7 @@ func main() {
 			stringCmd2 = strings.Trim(os.Args[x+1], "-")
 			stringCmd2 = strings.TrimSpace(stringCmd2)
 			FileUpload = fmt.Sprintf("%s", stringCmd2)
-			fmt.Println("put: ", stringCmd2)
+			//fmt.Println("put: ", stringCmd2)
 
 			//
 			// if /dir/dir/file
@@ -169,7 +169,7 @@ func main() {
 			stringCmd2 = strings.Trim(os.Args[x+1], "-")
 			stringCmd2 = strings.TrimSpace(stringCmd2)
 			Bucket = fmt.Sprintf("%s", stringCmd2)
-			fmt.Println("Bucket: ", stringCmd2)
+			//fmt.Println("Bucket: ", stringCmd2)
 
 		case "crypt":
 
@@ -312,12 +312,6 @@ func main() {
 		//
 		fileSize := fileInfo.Size()
 
-		if fileSize < fileChunk {
-
-			fmt.Println("Error, The file has to be larger than 5mb to send in parts to amazon s3.")
-			os.Exit(0)
-
-		}
 		//
 		//
 		//
@@ -376,16 +370,6 @@ func main() {
 		//
 		chunkPart := (fileChunk / (1024 * 1024))
 
-		//
-		//
-		//
-		boldRed.Println("File Size:", fileSize, "byte", sizeTotal, "Mb", "Chunk:", chunkPart, "Mb")
-
-		//
-		//
-		//
-		boldYellow.Println("Uploading by Parts...")
-
 		go func() {
 			sc := make(chan os.Signal, 1)
 			signal.Notify(sc, os.Interrupt)
@@ -425,64 +409,116 @@ func main() {
 		//
 		//
 		//
-		for i := uint64(0); i < totalPartsNum; i++ {
-
-			<-timer
+		if fileSize < fileChunk {
 
 			//
 			//
 			//
-			partSize := int(math.Min(fileChunk, float64(fileSize-int64(i*fileChunk))))
+			boldRed.Println("File Size:", fileSize, "byte")
+
+			//
+			// Use another form of putAll shipping
+			//
+			partsx, erry := multi.PutAll(file, fileChunk)
 
 			//
 			//
 			//
-			partBuffer := make([]byte, partSize)
+			if erry != nil {
+
+				fmt.Println("Error using send with putAll: ", erry)
+				os.Exit(0)
+			}
 
 			//
 			//
 			//
-			sizePart, errx2 := io.ReadFull(HeaderPart, partBuffer)
+			erry = multi.Complete(partsx)
 
 			//
 			//
 			//
-			erro.Check(errx2)
+			fmt.Print("\033[?25h")
 
 			//
 			//
 			//
-			piece, errx3 := multi.PutPart(int(i)+1, strings.NewReader(string(partBuffer))) // write to S3 bucket part by part
+			boldYellow.Println("\n\nUpload completed...")
+
+		} else {
 
 			//
 			//
 			//
-			erro.Check(errx3)
-
-			fmt.Print("\r")
-			//
-			//
-			//
-			boldWhite.Printf("Processing %d piece of %d and uploaded %d bytes.\n ", int(i), int(totalPartsNum), int(sizePart))
+			boldRed.Println("File Size:", fileSize, "byte", sizeTotal, "Mb", "Chunk:", chunkPart, "Mb")
 
 			//
 			//
 			//
-			parts = append(parts, piece)
+			boldYellow.Println("Uploading by Parts...")
+
+			//
+			//
+			//
+			for i := uint64(0); i < totalPartsNum; i++ {
+
+				<-timer
+
+				//
+				//
+				//
+				partSize := int(math.Min(fileChunk, float64(fileSize-int64(i*fileChunk))))
+
+				//
+				//
+				//
+				partBuffer := make([]byte, partSize)
+
+				//
+				//
+				//
+				sizePart, errx2 := io.ReadFull(HeaderPart, partBuffer)
+
+				//
+				//
+				//
+				erro.Check(errx2)
+
+				//
+				//
+				//
+				piece, errx3 := multi.PutPart(int(i)+1, strings.NewReader(string(partBuffer))) // write to S3 bucket part by part
+
+				//
+				//
+				//
+				erro.Check(errx3)
+
+				fmt.Print("\r")
+				//
+				//
+				//
+				boldWhite.Printf("Processing %d piece of %d and uploaded %d bytes.\n ", int(i), int(totalPartsNum), int(sizePart))
+
+				//
+				//
+				//
+				parts = append(parts, piece)
+			}
+
+			//
+			//
+			//
+			err = multi.Complete(parts)
+
+			//
+			//
+			//
+			erro.Check(err)
+
+			fmt.Print("\033[?25h")
+			boldYellow.Println("\n\nUpload completed...")
 		}
-
-		//
-		//
-		//
-		err = multi.Complete(parts)
-
-		//
-		//
-		//
-		erro.Check(err)
-
-		fmt.Print("\033[?25h")
-		boldYellow.Println("\n\nUpload completed...")
 
 	} else {
 
