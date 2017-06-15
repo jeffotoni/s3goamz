@@ -13,8 +13,7 @@ The authentication method is done right in the code we will encapsulate to get t
 
 ![image]()
 
-
-# Install
+# Packages
 
 go get launchpad.net/goamz/aws
 
@@ -22,7 +21,11 @@ go get launchpad.net/goamz/s3
 
 go get github.com/fatih/color
 
+got get github.com/jeffotoni/gocry
+
 go get github.com/jeffotoni/s3goamz
+
+# Install
 
 go build s3goamz.go
 
