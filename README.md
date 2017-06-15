@@ -70,14 +70,20 @@ s3goamz --help
 # Example 6 
 
 ```go
+	
+s3goamz --help
 
-   -acl string
+   --acl string
     	Ex: read|write|all (default "read")
-  -bucket string
+
+  --bucket string
     	Ex: name-bucket
-  -crypt string
-    	Exs: des|rsa|md5 (default "des")
-  -put string
+
+  --crypt string
+    	empty value
+
+  --put string
     	Ex: file.pdf
+
 
 ```
