@@ -27,13 +27,15 @@ go get github.com/jeffotoni/s3goamz
 
 # Install
 
-go build s3goamz.go
+$ go build s3goamz.go
+
+$ sudo cp s3goamz /usr/bin
 
 # Example 1
 
 ```go
 
-s3goamz --put ~/Downloads/ex2.pdf --bucket name-bucket
+$ s3goamz --put ~/Downloads/ex2.pdf --bucket name-bucket
 
 ```
 
@@ -41,7 +43,7 @@ s3goamz --put ~/Downloads/ex2.pdf --bucket name-bucket
 
 ```go
 
-s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket
+$ s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket
 
 ```
 
@@ -49,7 +51,7 @@ s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket
 
 ```go
 
-s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket --crypt
+$ s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket --crypt
 
 Will encrypt... ~/Downloads/ex2.pdf.crypt
 Used key:  DKYPENJXW43SMOJCU6F5TMFVOUANMJNL
@@ -60,7 +62,7 @@ Used key:  DKYPENJXW43SMOJCU6F5TMFVOUANMJNL
 
 ```go
 
-s3goamz --version
+$ s3goamz --version
 
 ```
 
@@ -68,7 +70,7 @@ s3goamz --version
 
 ```go
 
-s3goamz -v
+$ s3goamz -v
 
 ```
 
@@ -77,7 +79,7 @@ s3goamz -v
 
 ```go
 
-s3goamz --help
+$ s3goamz --help
 
 ```
 
@@ -85,7 +87,7 @@ s3goamz --help
 
 ```go
 	
-s3goamz --help
+$ s3goamz --help
 
    --acl string
     	Ex: read|write|all (default "read")
