@@ -11,7 +11,7 @@ The authentication method is done right in the code we will encapsulate to get t
 
 # Example of operation
 
-![image](https://github.com/jeffotoni/s3goamz/blob/master/img/ex1.gif)
+![image](https://github.com/jeffotoni/s3goamz/blob/master/img/s3goamz.gif)
 
 # Packages
 
