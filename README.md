@@ -42,7 +42,18 @@ s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket
 
 ```
 
-# Example 3 
+# Example 3 Encrypting file
+
+```go
+
+s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket --crypt
+
+Will encrypt... ~/Downloads/ex2.pdf.crypt
+Used key:  DKYPENJXW43SMOJCU6F5TMFVOUANMJNL
+
+```
+
+# Example 4 
 
 ```go
 
@@ -50,7 +61,7 @@ s3goamz --version
 
 ```
 
-# Example 4 
+# Example 5
 
 ```go
 
@@ -59,7 +70,7 @@ s3goamz -v
 ```
 
 
-# Example 5 
+# Example 6 
 
 ```go
 
@@ -67,7 +78,7 @@ s3goamz --help
 
 ```
 
-# Example 6 
+# Example 7
 
 ```go
 	
