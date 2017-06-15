@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/fatih/color"
+	cry "github.com/jeffotoni/gocry/pkg"
 	auth "github.com/jeffotoni/s3goamz/pkg/auth"
 	check "github.com/jeffotoni/s3goamz/pkg/check"
 	erro "github.com/jeffotoni/s3goamz/pkg/erro"
@@ -44,6 +45,10 @@ const (
 
 const (
 	fileChunk = 5 * (1 << 20) // 5MB
+)
+
+const (
+	keyDefault = "DKYPENJXW43SMOJCU6F5TMFVOUANMJNL"
 )
 
 func main() {
@@ -99,7 +104,7 @@ func main() {
 	//
 	//
 	//
-	flag.String("crypt", "des", "Exs: des|rsa|md5")
+	flag.String("crypt", "", "empty value")
 
 	//
 	//
@@ -140,6 +145,9 @@ func main() {
 	//
 	var stringCmd2 string
 
+	var cryptInt int
+
+	cryptInt = 0
 	//
 	// Validate hidden flags
 	//
@@ -173,8 +181,7 @@ func main() {
 
 		case "crypt":
 
-			fmt.Println("crypt here...")
-			os.Exit(0)
+			cryptInt += 1
 
 		case "acl":
 
@@ -410,6 +417,28 @@ func main() {
 		//
 		//
 		if fileSize < fileChunk {
+
+			var fileCrypt string
+
+			if cryptInt == 1 {
+
+				//
+				// File must be encrypted
+				//
+
+				cry.Crypt(keyDefault, FileUpload)
+				fileCrypt = FileUpload + ".crypt"
+
+				//
+				// Will have to reopen etc ...
+				//
+
+			} else {
+
+				fileCrypt = FileUpload
+			}
+
+			fmt.Println("Will encrypt...", fileCrypt)
 
 			//
 			//
