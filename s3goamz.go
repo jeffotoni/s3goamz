@@ -302,6 +302,29 @@ func main() {
 
 	if check.Exists(FileUpload) == true {
 
+		var fileCrypt string
+
+		if cryptInt == 1 {
+
+			//
+			// File must be encrypted
+			//
+
+			cry.Crypt(keyDefault, FileUpload)
+			fileCrypt = FileUpload + ".crypt"
+
+			//
+			// Will have to reopen etc ...
+			//
+
+			fmt.Println("Will encrypt...", fileCrypt)
+			fmt.Println("Used key: ", keyDefault)
+
+			FileUpload = fileCrypt
+
+			//os.Exit(0)
+		}
+
 		//
 		//
 		//
@@ -417,28 +440,6 @@ func main() {
 		//
 		//
 		if fileSize < fileChunk {
-
-			var fileCrypt string
-
-			if cryptInt == 1 {
-
-				//
-				// File must be encrypted
-				//
-
-				cry.Crypt(keyDefault, FileUpload)
-				fileCrypt = FileUpload + ".crypt"
-
-				//
-				// Will have to reopen etc ...
-				//
-
-			} else {
-
-				fileCrypt = FileUpload
-			}
-
-			fmt.Println("Will encrypt...", fileCrypt)
 
 			//
 			//
