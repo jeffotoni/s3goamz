@@ -163,10 +163,17 @@ func main() {
 
 		case "put":
 
+			//fmt.Println(len(os.Args))
+
+			if len(os.Args) <= 2 {
+
+				boldRed.Println("\nMissing file as parameter ex: --put file.pdf\n")
+				os.Exit(0)
+			}
+
 			stringCmd2 = strings.Trim(os.Args[x+1], "-")
 			stringCmd2 = strings.TrimSpace(stringCmd2)
 			FileUpload = fmt.Sprintf("%s", stringCmd2)
-			//fmt.Println("put: ", stringCmd2)
 
 			//
 			// if /dir/dir/file
