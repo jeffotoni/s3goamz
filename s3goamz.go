@@ -116,6 +116,10 @@ func main() {
 	//
 	sizeArgs := len(os.Args)
 
+	check.Args()
+
+	os.Exit(0)
+
 	//
 	// Validate flags
 	// and Validate hidden flags
@@ -163,7 +167,7 @@ func main() {
 
 		case "put":
 
-			//fmt.Println(len(os.Args))
+			fmt.Println(len(os.Args))
 
 			if len(os.Args) <= 2 {
 
@@ -180,6 +184,10 @@ func main() {
 			//
 
 		case "bucket":
+
+			fmt.Println(len(os.Args))
+
+			//if len(os.Args) <= 2 {
 
 			stringCmd2 = strings.Trim(os.Args[x+1], "-")
 			stringCmd2 = strings.TrimSpace(stringCmd2)
