@@ -31,6 +31,44 @@ $ go build s3goamz.go
 
 $ sudo cp s3goamz /usr/bin
 
+# help
+
+```go
+	
+$ s3goamz --help
+
+  Use: 
+   s3goamz [OPTION]...
+   or: s3goamz --put file.pdf --bucket name-bucket [options]
+   or: s3goamz --put file.pdf --bucket name-bucket --acl read [options]
+   or: s3goamz --put file.pdf --bucket name-bucket --acl read --crypt
+
+   Put and bucket arguments are required.
+   -put,     --put      <file>    The file and its respective path
+   -bucket,  --bucket   <name>    Bucket name s3
+   -acl,     --acl      <options> read, write, all
+   -crypt,   --crypt    has no parameter
+   -help,    --help     -h
+   -version, --version, -v
+
+
+	
+  Use: 
+   s3goamz [OPTION]...
+   or: s3goamz --put file.pdf --bucket name-bucket [options]
+   or: s3goamz --put file.pdf --bucket name-bucket --acl read [options]
+   or: s3goamz --put file.pdf --bucket name-bucket --acl read --crypt
+
+   Put and bucket arguments are required.
+   -put,     --put      <file>    The file and its respective path
+   -bucket,  --bucket   <name>    Bucket name s3
+   -acl,     --acl      <options> read, write, all
+   -crypt,   --crypt    has no parameter
+   -help,    --help     -h
+   -version, --version, -v
+
+```
+
 # Example 1
 
 ```go
@@ -55,25 +93,5 @@ Used key:  DKYPENJXW43SMOJCU6F5TMFVOUANMJNL
 ```go
 
 $ s3goamz --version
-
-```
-
-# Example 4
-
-```go
-	
-$ s3goamz --help
-
-   --acl string
-    	Ex: read|write|all (default "read")
-
-  --bucket string
-    	Ex: name-bucket
-
-  --crypt string
-    	empty value
-
-  --put string
-    	Ex: file.pdf
 
 ```
