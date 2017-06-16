@@ -35,7 +35,7 @@ func Exists(fileName string) bool {
 //
 // FileUpload, Bucket, stringAcl
 //
-func GenArgs() (string, string, string) {
+func GenArgs() (string, string, string, int) {
 
 	//
 	//
@@ -62,11 +62,6 @@ func GenArgs() (string, string, string) {
 	//
 	//
 	//
-	var stringCmd2 string
-
-	//
-	//
-	//
 	var FileUpload string
 
 	//
@@ -89,15 +84,11 @@ func GenArgs() (string, string, string) {
 	//
 	var cryptInt int
 
+	cryptInt = 0
 	//
 	//
 	//
 	existCmd = 0
-
-	//
-	//
-	//
-	stringAclTmp := "read"
 
 	//
 	//
@@ -116,12 +107,6 @@ func GenArgs() (string, string, string) {
 
 		PrintDefaults()
 	}
-
-	//
-	// Validate hidden flags
-	//
-
-	Argsx := os.Args
 
 	//
 	//
@@ -247,7 +232,7 @@ func GenArgs() (string, string, string) {
 		}
 	}
 
-	return FileUpload, Bucket, stringAcl
+	return FileUpload, Bucket, stringAcl, cryptInt
 }
 
 //
@@ -260,6 +245,7 @@ func validAcl(x int, arrayParam map[int]string) string {
 
 	var stringCmd2 string
 	var stringAclTmp string
+	var stringAcl string
 
 	stringCmd2 = strings.Trim(arrayParam[x+1], "-")
 	stringCmd2 = strings.TrimSpace(stringCmd2)

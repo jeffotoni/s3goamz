@@ -16,7 +16,6 @@ package main
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"io"
 	"math"
@@ -94,12 +93,12 @@ func main() {
 	//
 	//
 	//
-	sizeArgs := len(os.Args)
+	var cryptInt int
 
 	//
 	// FileUpload, Bucket, stringAcl
 	//
-	FileUpload, Bucket, stringAclTmp = check.GenArgs()
+	FileUpload, Bucket, stringAclTmp, cryptInt = check.GenArgs()
 
 	if stringAclTmp == "read" {
 
@@ -112,145 +111,6 @@ func main() {
 	} else if stringAclTmp == "all" {
 
 		stringAcl = BucketOwnerFull
-	}
-
-	os.Exit(0)
-
-	//
-	// Validate flags
-	// and Validate hidden flags
-	// --v
-	// -v
-	// --version
-	// -version
-	//
-	// -help
-	// --help
-	// -h
-	// --h
-	//
-	if sizeArgs <= 1 {
-
-		flag.PrintDefaults()
-		os.Exit(0)
-	}
-
-	//
-	//
-	//
-	var stringCmd string
-
-	//
-	//
-	//
-	var stringCmd2 string
-
-	var cryptInt int
-
-	cryptInt = 0
-	//
-	// Validate hidden flags
-	//
-	for x := range os.Args {
-
-		stringCmd = strings.Trim(os.Args[x], "-")
-		stringCmd = strings.TrimSpace(stringCmd)
-		stringCmd = strings.ToLower(stringCmd)
-
-		//fmt.Println("args: ", sizeArgs, " ", x)
-
-		switch stringCmd {
-
-		case "put":
-
-			fmt.Println(len(os.Args))
-
-			if len(os.Args) <= 2 {
-
-				boldRed.Println("\nMissing file as parameter ex: --put file.pdf\n")
-				os.Exit(0)
-			}
-
-			stringCmd2 = strings.Trim(os.Args[x+1], "-")
-			stringCmd2 = strings.TrimSpace(stringCmd2)
-			FileUpload = fmt.Sprintf("%s", stringCmd2)
-
-			//
-			// if /dir/dir/file
-			//
-
-		case "bucket":
-
-			fmt.Println(len(os.Args))
-
-			//if len(os.Args) <= 2 {
-
-			stringCmd2 = strings.Trim(os.Args[x+1], "-")
-			stringCmd2 = strings.TrimSpace(stringCmd2)
-			Bucket = fmt.Sprintf("%s", stringCmd2)
-			//fmt.Println("Bucket: ", stringCmd2)
-
-		case "crypt":
-
-			cryptInt += 1
-
-		case "acl":
-
-			stringCmd2 = strings.Trim(os.Args[x+1], "-")
-			stringCmd2 = strings.TrimSpace(stringCmd2)
-			stringCmd2 = strings.ToLower(stringCmd2)
-
-			stringAclTmp = fmt.Sprintf("%s", stringCmd2)
-
-			// if stringAclTmp == "read" {
-
-			// 	stringAcl = BucketOwnerRead
-
-			// } else if stringAclTmp == "write" {
-
-			// 	stringAcl = PublicReadWrite
-
-			// } else if stringAclTmp == "all" {
-
-			// 	stringAcl = BucketOwnerFull
-
-			// } else {
-
-			// 	boldYellow.Println("Acl does not exist! Try red | write | all")
-			// 	os.Exit(0)
-
-			// }
-
-		case "version":
-
-			boldYellow.Println("v.1.0")
-			os.Exit(0)
-
-		case "v":
-
-			boldYellow.Println("v.1.0")
-			os.Exit(0)
-
-		case "help":
-
-			flag.PrintDefaults()
-			os.Exit(0)
-
-		case "h":
-
-			flag.PrintDefaults()
-			os.Exit(0)
-
-		default:
-			//flag.PrintDefaults()
-			//os.Exit(0)
-		}
-	}
-
-	if stringCmd2 == "" {
-
-		flag.PrintDefaults()
-		os.Exit(0)
 	}
 
 	//
@@ -277,7 +137,21 @@ func main() {
 		lastValue = FileUpload
 	}
 
-	strcommand := "start upload to [ --put " + lastValue + " --bucket " + Bucket + " --acl " + stringAclTmp + "]"
+	//
+	//
+	//
+	var strcommand string
+
+	//
+	//
+	//
+	if cryptInt > 0 {
+
+		strcommand = "start upload to [ --put " + lastValue + " --bucket " + Bucket + " --acl " + stringAclTmp + " --crypt ]"
+
+	} else {
+		strcommand = "start upload to [ --put " + lastValue + " --bucket " + Bucket + " --acl " + stringAclTmp + " ]"
+	}
 
 	boldYellow.Println(strcommand)
 
