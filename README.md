@@ -51,22 +51,6 @@ $ s3goamz --help
    -help,    --help     -h
    -version, --version, -v
 
-
-	
-  Use: 
-   s3goamz [OPTION]...
-   or: s3goamz --put file.pdf --bucket name-bucket [options]
-   or: s3goamz --put file.pdf --bucket name-bucket --acl read [options]
-   or: s3goamz --put file.pdf --bucket name-bucket --acl read --crypt
-
-   Put and bucket arguments are required.
-   -put,     --put      <file>    The file and its respective path
-   -bucket,  --bucket   <name>    Bucket name s3
-   -acl,     --acl      <options> read, write, all
-   -crypt,   --crypt    has no parameter
-   -help,    --help     -h
-   -version, --version, -v
-
 ```
 
 # Example 1
