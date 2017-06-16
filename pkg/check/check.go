@@ -193,22 +193,22 @@ func GenArgs() (string, string, string, int) {
 		case "--help":
 
 			PrintDefaults()
-			existCmd++
+			os.Exit(0)
 
 		case "--h":
 
 			PrintDefaults()
-			existCmd++
+			os.Exit(0)
 
 		case "-help":
 
 			PrintDefaults()
-			existCmd++
+			os.Exit(0)
 
 		case "-h":
 
 			PrintDefaults()
-			existCmd++
+			os.Exit(0)
 
 		case "--version":
 
@@ -232,6 +232,15 @@ func GenArgs() (string, string, string, int) {
 		}
 	}
 
+	//
+	//
+	//
+	if cryptInt == 0 {
+
+		PrintDefaults()
+		os.Exit(0)
+	}
+
 	return FileUpload, Bucket, stringAcl, cryptInt
 }
 
@@ -240,8 +249,8 @@ func GenArgs() (string, string, string, int) {
 //
 func validAcl(x int, arrayParam map[int]string) string {
 
-	yellow := color.New(color.FgYellow)
-	boldYellow := yellow.Add(color.Bold)
+	red := color.New(color.FgRed)
+	boldRed := red.Add(color.Bold)
 
 	var stringCmd2 string
 	var stringAclTmp string
@@ -267,7 +276,7 @@ func validAcl(x int, arrayParam map[int]string) string {
 
 	} else {
 
-		boldYellow.Println("Acl does not exist! Try red | write | all")
+		boldRed.Println("\nAcl does not exist! Try red | write | all\n")
 		os.Exit(0)
 	}
 
@@ -288,6 +297,15 @@ func validPut(x int, arrayParam map[int]string) string {
 	value, ok := arrayParam[x+1]
 
 	if ok {
+
+		i := strings.Index(value, "-")
+
+		if i > -1 {
+
+			// exist
+			boldRed.Println("\nMissing file as parameter ex: --put <file>\n")
+			os.Exit(0)
+		}
 
 		stringCmd2 = strings.Trim(value, "-")
 		stringCmd2 = strings.TrimSpace(stringCmd2)
@@ -316,6 +334,15 @@ func validBucket(x int, arrayParam map[int]string) string {
 	value, ok := arrayParam[x+1]
 
 	if ok {
+
+		i := strings.Index(value, "-")
+
+		if i > -1 {
+
+			// exist
+			boldRed.Println("\nMissing file as parameter ex: --bucket <file>\n")
+			os.Exit(0)
+		}
 
 		stringCmd2 = strings.Trim(value, "-")
 		stringCmd2 = strings.TrimSpace(stringCmd2)
