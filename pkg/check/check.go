@@ -123,6 +123,16 @@ func GenArgs() (string, string, string, int) {
 		//
 		//
 		arrayParam[j] = val
+
+		i := strings.Index(val, "-")
+
+		if i == 0 {
+
+			fmt.Println(":::", val)
+			//
+			// Exists in the command map
+			//
+		}
 	}
 
 	for x := range arrayParam {
