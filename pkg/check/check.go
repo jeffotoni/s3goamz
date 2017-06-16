@@ -40,7 +40,7 @@ func GenArgs() (string, string, string, int) {
 	//
 	//
 	//
-	mapCommand := map[int]string{0: "put", 1: "bucket", 2: "acl", 3: "version", 4: "help", 5: "h", 6: "v"}
+	mapCommand := map[int]string{0: "put", 1: "bucket", 2: "acl", 3: "crypt", 4: "version", 5: "help", 6: "h", 7: "v"}
 
 	//
 	//
