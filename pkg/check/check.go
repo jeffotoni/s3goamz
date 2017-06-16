@@ -18,6 +18,18 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/fatih/color"
+	"launchpad.net/goamz/s3"
+)
+
+const (
+	Private           = s3.ACL("private")
+	PublicRead        = s3.ACL("public-read")
+	PublicReadWrite   = s3.ACL("public-read-write")
+	AuthenticatedRead = s3.ACL("authenticated-read")
+	BucketOwnerRead   = s3.ACL("bucket-owner-read")
+	BucketOwnerFull   = s3.ACL("bucket-owner-full-control")
 )
 
 func Exists(fileName string) bool {
@@ -29,20 +41,82 @@ func Exists(fileName string) bool {
 
 func Args() {
 
+	//
+	//
+	//
+	//white := color.New(color.FgWhite)
+	//boldWhite := white.Add(color.Bold)
+
+	//
+	//
+	//
+	red := color.New(color.FgRed)
+	boldRed := red.Add(color.Bold)
+
+	//
+	//
+	//
+	yellow := color.New(color.FgYellow)
+	boldYellow := yellow.Add(color.Bold)
+
+	//
+	//
+	//
 	var stringCmd string
 
+	//
+	//
+	//
+	var stringCmd2 string
+
+	//
+	//
+	//
+	var FileUpload string
+
+	//
+	//
+	//
+	var Bucket string
+
+	//
+	//
+	//
 	var existCmd int
 
+	//
+	//
+	//
 	var lenArgs int
 
+	//
+	//
+	//
+	var cryptInt int
+
+	//
+	//
+	//
 	existCmd = 0
 
+	//
+	//
+	//
+	stringAclTmp := "read"
+
+	//
+	//
+	//
+	stringAcl := BucketOwnerRead
+
+	//
+	//
+	//
 	lenArgs = len(os.Args)
 
 	//
 	// == 1 default cmd
 	//
-
 	if lenArgs == 1 {
 
 		PrintDefaults()
@@ -51,8 +125,6 @@ func Args() {
 	//
 	// Validate hidden flags
 	//
-
-	fmt.Println(len(os.Args))
 
 	Argsx := os.Args
 
@@ -72,56 +144,73 @@ func Args() {
 		arrayParam[j] = val
 	}
 
-	value, ok := arrayParam[4]
+	for x := range arrayParam {
 
-	if ok {
-
-		fmt.Println("value: ", value)
-
-	} else {
-
-		fmt.Println("key not found")
-	}
-
-	fmt.Println(arrayParam)
-
-	os.Exit(0)
-
-	for x := range os.Args {
-
-		stringCmd = strings.Trim(os.Args[x], " ")
+		stringCmd = strings.Trim(arrayParam[x], " ")
 		stringCmd = strings.TrimSpace(stringCmd)
 		stringCmd = strings.ToLower(stringCmd)
-
-		//fmt.Println("args: ", stringCmd, " ", x)
 
 		switch stringCmd {
 
 		case "--put":
 
-			fmt.Println(Argsx[x])
+			FileUpload = validPut(x, arrayParam)
+			existCmd++
 
-			//value, ok := Argsx[x+1]
+		case "-put":
 
-			// if ok {
-			// 	fmt.Println("value: ", value)
-			// } else {
-			// 	fmt.Println("key not found")
-			// }
-
-			// fmt.Println("val: ", val, " ex: ", exists)
-
+			FileUpload = validPut(x, arrayParam)
 			existCmd++
 
 		case "--bucket":
 
+			Bucket = validBucket(x, arrayParam)
+			existCmd++
+
+		case "-bucket":
+
+			Bucket = validBucket(x, arrayParam)
 			existCmd++
 
 		case "--crypt":
 
+			_, ok := arrayParam[x+1]
+
+			if ok {
+
+				boldRed.Println("\nThere is no value for this parameter\n")
+				os.Exit(0)
+
+			}
+
+			cryptInt += 1
 			existCmd++
 
 		case "--acl":
+
+			stringCmd2 = strings.Trim(arrayParam[x+1], "-")
+			stringCmd2 = strings.TrimSpace(stringCmd2)
+			stringCmd2 = strings.ToLower(stringCmd2)
+
+			stringAclTmp = fmt.Sprintf("%s", stringCmd2)
+
+			if stringAclTmp == "read" {
+
+				stringAcl = BucketOwnerRead
+
+			} else if stringAclTmp == "write" {
+
+				stringAcl = PublicReadWrite
+
+			} else if stringAclTmp == "all" {
+
+				stringAcl = BucketOwnerFull
+
+			} else {
+
+				boldYellow.Println("Acl does not exist! Try red | write | all")
+				os.Exit(0)
+			}
 
 			existCmd++
 
@@ -138,14 +227,6 @@ func Args() {
 			existCmd++
 
 		case "--v":
-
-			existCmd++
-
-		case "-put":
-
-			existCmd++
-
-		case "-bucket":
 
 			existCmd++
 
@@ -174,98 +255,75 @@ func Args() {
 			existCmd++
 
 		}
-
-		//if existCmd ==
-		// case "put":
-
-		// 	fmt.Println(len(os.Args))
-
-		// 	if len(os.Args) <= 2 {
-
-		// 		boldRed.Println("\nMissing file as parameter ex: --put file.pdf\n")
-		// 		os.Exit(0)
-		// 	}
-
-		// 	stringCmd2 = strings.Trim(os.Args[x+1], "-")
-		// 	stringCmd2 = strings.TrimSpace(stringCmd2)
-		// 	FileUpload = fmt.Sprintf("%s", stringCmd2)
-
-		// 	//
-		// 	// if /dir/dir/file
-		// 	//
-
-		// case "bucket":
-
-		// 	fmt.Println(len(os.Args))
-
-		// 	//if len(os.Args) <= 2 {
-
-		// 	stringCmd2 = strings.Trim(os.Args[x+1], "-")
-		// 	stringCmd2 = strings.TrimSpace(stringCmd2)
-		// 	Bucket = fmt.Sprintf("%s", stringCmd2)
-		// 	//fmt.Println("Bucket: ", stringCmd2)
-
-		// case "crypt":
-
-		// 	cryptInt += 1
-
-		// case "acl":
-
-		// 	stringCmd2 = strings.Trim(os.Args[x+1], "-")
-		// 	stringCmd2 = strings.TrimSpace(stringCmd2)
-		// 	stringCmd2 = strings.ToLower(stringCmd2)
-
-		// 	stringAclTmp = fmt.Sprintf("%s", stringCmd2)
-
-		// 	if stringAclTmp == "read" {
-
-		// 		stringAcl = BucketOwnerRead
-
-		// 	} else if stringAclTmp == "write" {
-
-		// 		stringAcl = PublicReadWrite
-
-		// 	} else if stringAclTmp == "all" {
-
-		// 		stringAcl = BucketOwnerFull
-
-		// 	} else {
-
-		// 		boldYellow.Println("Acl does not exist! Try red | write | all")
-		// 		os.Exit(0)
-
-		// 	}
-
-		// case "version":
-
-		// 	boldYellow.Println("v.1.0")
-		// 	os.Exit(0)
-
-		// case "v":
-
-		// 	boldYellow.Println("v.1.0")
-		// 	os.Exit(0)
-
-		// case "help":
-
-		// 	flag.PrintDefaults()
-		// 	os.Exit(0)
-
-		// case "h":
-
-		// 	flag.PrintDefaults()
-		// 	os.Exit(0)
-
-		// default:
-		// 	//flag.PrintDefaults()
-		// 	//os.Exit(0)() {
-		// }
 	}
 
 	fmt.Println("Len: ", lenArgs)
 	fmt.Println("Exist: ", existCmd)
+	fmt.Println("Exist: ", FileUpload)
+	fmt.Println("Exist: ", Bucket)
+	fmt.Println("Exist: ", stringAcl)
+	fmt.Println("Exist: ", Argsx)
 }
 
+//
+//
+//
+func validPut(x int, arrayParam map[int]string) string {
+
+	red := color.New(color.FgRed)
+	boldRed := red.Add(color.Bold)
+
+	var stringCmd2 string
+	var FileUpload string
+
+	value, ok := arrayParam[x+1]
+
+	if ok {
+
+		stringCmd2 = strings.Trim(value, "-")
+		stringCmd2 = strings.TrimSpace(stringCmd2)
+		FileUpload = fmt.Sprintf("%s", stringCmd2)
+
+	} else {
+
+		boldRed.Println("\nMissing file as parameter ex: --put <file>\n")
+		os.Exit(0)
+	}
+
+	return FileUpload
+}
+
+//
+//
+//
+func validBucket(x int, arrayParam map[int]string) string {
+
+	red := color.New(color.FgRed)
+	boldRed := red.Add(color.Bold)
+
+	var stringCmd2 string
+	var Bucket string
+
+	value, ok := arrayParam[x+1]
+
+	if ok {
+
+		stringCmd2 = strings.Trim(value, "-")
+		stringCmd2 = strings.TrimSpace(stringCmd2)
+		Bucket = fmt.Sprintf("%s", stringCmd2)
+
+	} else {
+
+		boldRed.Println("\nMissing file as parameter ex: --bucket <name>\n")
+		os.Exit(0)
+	}
+
+	return Bucket
+}
+
+//
+//
+//
 func PrintDefaults() {
 
 	var help string

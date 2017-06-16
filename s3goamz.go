@@ -206,24 +206,24 @@ func main() {
 
 			stringAclTmp = fmt.Sprintf("%s", stringCmd2)
 
-			if stringAclTmp == "read" {
+			// if stringAclTmp == "read" {
 
-				stringAcl = BucketOwnerRead
+			// 	stringAcl = BucketOwnerRead
 
-			} else if stringAclTmp == "write" {
+			// } else if stringAclTmp == "write" {
 
-				stringAcl = PublicReadWrite
+			// 	stringAcl = PublicReadWrite
 
-			} else if stringAclTmp == "all" {
+			// } else if stringAclTmp == "all" {
 
-				stringAcl = BucketOwnerFull
+			// 	stringAcl = BucketOwnerFull
 
-			} else {
+			// } else {
 
-				boldYellow.Println("Acl does not exist! Try red | write | all")
-				os.Exit(0)
+			// 	boldYellow.Println("Acl does not exist! Try red | write | all")
+			// 	os.Exit(0)
 
-			}
+			// }
 
 		case "version":
 
