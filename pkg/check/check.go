@@ -235,7 +235,7 @@ func GenArgs() (string, string, string, int) {
 	//
 	//
 	//
-	if cryptInt == 0 {
+	if existCmd == 0 || existCmd == 1 {
 
 		PrintDefaults()
 		os.Exit(0)
@@ -300,7 +300,7 @@ func validPut(x int, arrayParam map[int]string) string {
 
 		i := strings.Index(value, "-")
 
-		if i > -1 {
+		if i == 0 {
 
 			// exist
 			boldRed.Println("\nMissing file as parameter ex: --put <file>\n")
@@ -337,7 +337,7 @@ func validBucket(x int, arrayParam map[int]string) string {
 
 		i := strings.Index(value, "-")
 
-		if i > -1 {
+		if i == 0 {
 
 			// exist
 			boldRed.Println("\nMissing file as parameter ex: --bucket <file>\n")
