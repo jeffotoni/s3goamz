@@ -20,18 +20,11 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"launchpad.net/goamz/s3"
 )
 
-const (
-	Private           = s3.ACL("private")
-	PublicRead        = s3.ACL("public-read")
-	PublicReadWrite   = s3.ACL("public-read-write")
-	AuthenticatedRead = s3.ACL("authenticated-read")
-	BucketOwnerRead   = s3.ACL("bucket-owner-read")
-	BucketOwnerFull   = s3.ACL("bucket-owner-full-control")
-)
-
+//
+//
+//
 func Exists(fileName string) bool {
 
 	_, err := os.Stat(fileName)
@@ -39,13 +32,15 @@ func Exists(fileName string) bool {
 	return !os.IsNotExist(err)
 }
 
-func Args() {
+//
+// FileUpload, Bucket, stringAcl
+//
+func GenArgs() (string, string, string) {
 
 	//
 	//
-	//
-	//white := color.New(color.FgWhite)
-	//boldWhite := white.Add(color.Bold)
+	// white := color.New(color.FgWhite)
+	// boldWhite := white.Add(color.Bold)
 
 	//
 	//
@@ -107,7 +102,7 @@ func Args() {
 	//
 	//
 	//
-	stringAcl := BucketOwnerRead
+	stringAcl := ""
 
 	//
 	//
@@ -186,83 +181,111 @@ func Args() {
 			cryptInt += 1
 			existCmd++
 
-		case "--acl":
-
-			stringCmd2 = strings.Trim(arrayParam[x+1], "-")
-			stringCmd2 = strings.TrimSpace(stringCmd2)
-			stringCmd2 = strings.ToLower(stringCmd2)
-
-			stringAclTmp = fmt.Sprintf("%s", stringCmd2)
-
-			if stringAclTmp == "read" {
-
-				stringAcl = BucketOwnerRead
-
-			} else if stringAclTmp == "write" {
-
-				stringAcl = PublicReadWrite
-
-			} else if stringAclTmp == "all" {
-
-				stringAcl = BucketOwnerFull
-
-			} else {
-
-				boldYellow.Println("Acl does not exist! Try red | write | all")
-				os.Exit(0)
-			}
-
-			existCmd++
-
-		case "--help":
-
-			existCmd++
-
-		case "--h":
-
-			existCmd++
-
-		case "--version":
-
-			existCmd++
-
-		case "--v":
-
-			existCmd++
-
 		case "-crypt":
 
+			_, ok := arrayParam[x+1]
+
+			if ok {
+
+				boldRed.Println("\nThere is no value for this parameter\n")
+				os.Exit(0)
+
+			}
+
+			cryptInt += 1
+			existCmd++
+
+		case "--acl":
+
+			stringAcl = validAcl(x, arrayParam)
 			existCmd++
 
 		case "-acl":
 
+			stringAcl = validAcl(x, arrayParam)
+			existCmd++
+
+		case "--help":
+
+			PrintDefaults()
+			existCmd++
+
+		case "--h":
+
+			PrintDefaults()
 			existCmd++
 
 		case "-help":
 
+			PrintDefaults()
 			existCmd++
 
 		case "-h":
 
+			PrintDefaults()
 			existCmd++
+
+		case "--version":
+
+			boldYellow.Println("v.1.0")
+			os.Exit(0)
+
+		case "--v":
+
+			boldYellow.Println("v.1.0")
+			os.Exit(0)
 
 		case "-version":
 
-			existCmd++
+			boldYellow.Println("v.1.0")
+			os.Exit(0)
 
 		case "-v":
 
-			existCmd++
-
+			boldYellow.Println("v.1.0")
+			os.Exit(0)
 		}
 	}
 
-	fmt.Println("Len: ", lenArgs)
-	fmt.Println("Exist: ", existCmd)
-	fmt.Println("Exist: ", FileUpload)
-	fmt.Println("Exist: ", Bucket)
-	fmt.Println("Exist: ", stringAcl)
-	fmt.Println("Exist: ", Argsx)
+	return FileUpload, Bucket, stringAcl
+}
+
+//
+//
+//
+func validAcl(x int, arrayParam map[int]string) string {
+
+	yellow := color.New(color.FgYellow)
+	boldYellow := yellow.Add(color.Bold)
+
+	var stringCmd2 string
+	var stringAclTmp string
+
+	stringCmd2 = strings.Trim(arrayParam[x+1], "-")
+	stringCmd2 = strings.TrimSpace(stringCmd2)
+	stringCmd2 = strings.ToLower(stringCmd2)
+
+	stringAclTmp = fmt.Sprintf("%s", stringCmd2)
+
+	if stringAclTmp == "read" {
+
+		stringAcl = "read"
+
+	} else if stringAclTmp == "write" {
+
+		stringAcl = "write"
+
+	} else if stringAclTmp == "all" {
+
+		stringAcl = "all"
+
+	} else {
+
+		boldYellow.Println("Acl does not exist! Try red | write | all")
+		os.Exit(0)
+	}
+
+	return stringAcl
 }
 
 //

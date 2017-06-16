@@ -94,29 +94,25 @@ func main() {
 	//
 	//
 	//
-	flag.String("put", "", "Ex: file.pdf")
-
-	//
-	//
-	//
-	flag.String("bucket", "", "Ex: name-bucket")
-
-	//
-	//
-	//
-	flag.String("crypt", "", "empty value")
-
-	//
-	//
-	//
-	flag.String("acl", "read", "Ex: read|write|all")
-
-	//
-	//
-	//
 	sizeArgs := len(os.Args)
 
-	check.Args()
+	//
+	// FileUpload, Bucket, stringAcl
+	//
+	FileUpload, Bucket, stringAclTmp = check.GenArgs()
+
+	if stringAclTmp == "read" {
+
+		stringAcl = BucketOwnerRead
+
+	} else if stringAclTmp == "write" {
+
+		stringAcl = PublicReadWrite
+
+	} else if stringAclTmp == "all" {
+
+		stringAcl = BucketOwnerFull
+	}
 
 	os.Exit(0)
 
