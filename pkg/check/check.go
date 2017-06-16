@@ -39,6 +39,11 @@ func GenArgs() (string, string, string, int) {
 
 	//
 	//
+	//
+	mapCommand := map[int]string{0: "put", 1: "bucket", 2: "acl", 3: "version", 4: "help", 5: "h", 6: "v"}
+
+	//
+	//
 	// white := color.New(color.FgWhite)
 	// boldWhite := white.Add(color.Bold)
 
@@ -117,6 +122,11 @@ func GenArgs() (string, string, string, int) {
 	//
 	//
 	//
+	var cmdFor string
+
+	//
+	//
+	//
 	for j, val := range os.Args {
 
 		//
@@ -128,7 +138,34 @@ func GenArgs() (string, string, string, int) {
 
 		if i == 0 {
 
-			fmt.Println(":::", val)
+			// fmt.Println(":::", val)
+
+			stringCmd = strings.Trim(val, "-")
+			stringCmd = strings.TrimSpace(stringCmd)
+			stringCmd = strings.ToLower(stringCmd)
+
+			exitInMap := 0
+
+			for _, val2 := range mapCommand {
+
+				if val2 == stringCmd {
+
+					exitInMap = 1
+					break
+
+				} else {
+
+					cmdFor = val
+				}
+			}
+
+			if exitInMap == 0 {
+
+				boldRed.Println("\nCommand [" + cmdFor + "] does not exist!")
+				PrintDefaults()
+				os.Exit(0)
+			}
+
 			//
 			// Exists in the command map
 			//
