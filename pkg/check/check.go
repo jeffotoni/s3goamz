@@ -106,6 +106,7 @@ func GenArgs() (string, string, string, int) {
 	if lenArgs == 1 {
 
 		PrintDefaults()
+		os.Exit(0)
 	}
 
 	//
