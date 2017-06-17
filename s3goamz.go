@@ -179,8 +179,8 @@ func main() {
 			// Will have to reopen etc ...
 			//
 
-			fmt.Println("Decrypted file... ", FileUpGet+".descr")
-			fmt.Println("Used key: ", keyDefault)
+			boldWhite.Println("Decrypted file... ", FileUpGet+".descr")
+			boldYellow.Println("Used key: ", keyDefault)
 		}
 
 	} else {
