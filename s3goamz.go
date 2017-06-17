@@ -22,15 +22,14 @@ import (
 	"math"
 	"net/http"
 	"os"
-	"os/signal"
 	"strings"
-	"time"
 
 	"github.com/fatih/color"
 	cry "github.com/jeffotoni/gocry/pkg"
 	auth "github.com/jeffotoni/s3goamz/pkg/auth"
 	check "github.com/jeffotoni/s3goamz/pkg/check"
 	erro "github.com/jeffotoni/s3goamz/pkg/erro"
+	runer "github.com/jeffotoni/s3goamz/pkg/runer"
 	"launchpad.net/goamz/s3"
 )
 
@@ -147,7 +146,16 @@ func main() {
 
 		boldYellow.Println(strcommand)
 
+		//
+		//
+		//
+		timer := runer.RunerTimer()
+
 		dbyte, erroget := conn.Get(FileUpGet)
+		<-timer
+
+		fmt.Print("\r")
+		fmt.Print("\033[?25h")
 
 		erro.Check(erroget)
 
@@ -159,7 +167,21 @@ func main() {
 
 		boldYellow.Println("Download done successfully: ", FileUpGet)
 
-		os.Exit(0)
+		//
+		//
+		//
+
+		if cryptInt > 0 {
+
+			cry.Decrypt(keyDefault, FileUpGet)
+
+			//
+			// Will have to reopen etc ...
+			//
+
+			fmt.Println("Decrypted file... ", FileUpGet+".descr")
+			fmt.Println("Used key: ", keyDefault)
+		}
 
 	} else {
 
@@ -314,41 +336,10 @@ func main() {
 			//
 			chunkPart := (fileChunk / (1024 * 1024))
 
-			go func() {
-				sc := make(chan os.Signal, 1)
-				signal.Notify(sc, os.Interrupt)
-
-				<-sc
-
-				boldRed.Println("\ncanceled!")
-				fmt.Print("\033[?25h")
-				os.Exit(0)
-			}()
-
-			fmt.Print("\033[?25l")
-
-			timer := time.Tick(time.Duration(50) * time.Millisecond)
-
-			s := []rune(`|/~\`)
-			//s := []rune(`-=*=`)
-			//s := []rune(`◐◓◑◒`)
-			i := 0
-
-			go func() {
-				for {
-
-					<-timer
-
-					fmt.Print("\r")
-					boldWhite.Print(string(s[i]))
-
-					i++
-
-					if i == len(s) {
-						i = 0
-					}
-				}
-			}()
+			//
+			//
+			//
+			timer := runer.RunerTimer()
 
 			//
 			//

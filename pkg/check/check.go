@@ -40,7 +40,7 @@ func GenArgs() (string, string, string, int, string) {
 	//
 	//
 	//
-	mapCommand := map[int]string{0: "put", 1: "get", 2: "bucket", 3: "acl", 4: "crypt", 5: "version", 6: "help", 7: "h", 8: "v"}
+	mapCommand := map[int]string{0: "put", 1: "get", 2: "bucket", 3: "acl", 4: "crypt", 5: "decrypt", 6: "version", 7: "help", 8: "h", 9: "v"}
 
 	//
 	//
@@ -163,6 +163,7 @@ func GenArgs() (string, string, string, int, string) {
 			if stringCmd == "get" {
 
 				exitInGetPut++
+
 			} else if stringCmd == "put" {
 
 				exitInGetPut++
@@ -279,6 +280,34 @@ func GenArgs() (string, string, string, int, string) {
 		case "-acl":
 
 			stringAcl = validAcl(x, arrayParam)
+			existCmd++
+
+		case "--decrypt":
+
+			_, ok := arrayParam[x+1]
+
+			if ok {
+
+				boldRed.Println("\nThere is no value for this parameter\n")
+				os.Exit(0)
+
+			}
+
+			cryptInt += 1
+			existCmd++
+
+		case "-decrypt":
+
+			_, ok := arrayParam[x+1]
+
+			if ok {
+
+				boldRed.Println("\nThere is no value for this parameter\n")
+				os.Exit(0)
+
+			}
+
+			cryptInt += 1
 			existCmd++
 
 		case "--help":
