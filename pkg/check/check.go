@@ -35,12 +35,12 @@ func Exists(fileName string) bool {
 //
 // FileUpload, Bucket, stringAcl
 //
-func GenArgs() (string, string, string, int) {
+func GenArgs() (string, string, string, int, string) {
 
 	//
 	//
 	//
-	mapCommand := map[int]string{0: "put", 1: "bucket", 2: "acl", 3: "crypt", 4: "version", 5: "help", 6: "h", 7: "v"}
+	mapCommand := map[int]string{0: "put", 1: "get", 2: "bucket", 3: "acl", 4: "crypt", 5: "version", 6: "help", 7: "h", 8: "v"}
 
 	//
 	//
@@ -72,6 +72,11 @@ func GenArgs() (string, string, string, int) {
 	//
 	//
 	//
+	var FileGetPut string
+
+	//
+	//
+	//
 	var Bucket string
 
 	//
@@ -89,7 +94,11 @@ func GenArgs() (string, string, string, int) {
 	//
 	var cryptInt int
 
+	//
+	//
+	//
 	cryptInt = 0
+
 	//
 	//
 	//
@@ -127,6 +136,11 @@ func GenArgs() (string, string, string, int) {
 	//
 	//
 	//
+	exitInGetPut := 0
+
+	//
+	//
+	//
 	for j, val := range os.Args {
 
 		//
@@ -145,6 +159,14 @@ func GenArgs() (string, string, string, int) {
 			stringCmd = strings.ToLower(stringCmd)
 
 			exitInMap := 0
+
+			if stringCmd == "get" {
+
+				exitInGetPut++
+			} else if stringCmd == "put" {
+
+				exitInGetPut++
+			}
 
 			for _, val2 := range mapCommand {
 
@@ -172,6 +194,13 @@ func GenArgs() (string, string, string, int) {
 		}
 	}
 
+	if exitInGetPut >= 2 {
+
+		boldRed.Println("\nCommand get and put not allowed!")
+		PrintDefaults()
+		os.Exit(0)
+	}
+
 	for x := range arrayParam {
 
 		stringCmd = strings.Trim(arrayParam[x], " ")
@@ -183,11 +212,25 @@ func GenArgs() (string, string, string, int) {
 		case "--put":
 
 			FileUpload = validPut(x, arrayParam)
+			FileGetPut = "put"
 			existCmd++
 
 		case "-put":
 
 			FileUpload = validPut(x, arrayParam)
+			FileGetPut = "put"
+			existCmd++
+
+		case "--get":
+
+			FileGetPut = "get"
+			FileUpload = validGet(x, arrayParam)
+			existCmd++
+
+		case "-get":
+
+			FileGetPut = "get"
+			FileUpload = validGet(x, arrayParam)
 			existCmd++
 
 		case "--bucket":
@@ -289,7 +332,7 @@ func GenArgs() (string, string, string, int) {
 		os.Exit(0)
 	}
 
-	return FileUpload, Bucket, stringAcl, cryptInt
+	return FileUpload, Bucket, stringAcl, cryptInt, FileGetPut
 }
 
 //
@@ -371,6 +414,43 @@ func validPut(x int, arrayParam map[int]string) string {
 //
 //
 //
+func validGet(x int, arrayParam map[int]string) string {
+
+	red := color.New(color.FgRed)
+	boldRed := red.Add(color.Bold)
+
+	var stringCmd2 string
+	var FileGet string
+
+	value, ok := arrayParam[x+1]
+
+	if ok {
+
+		i := strings.Index(value, "-")
+
+		if i == 0 {
+
+			// exist
+			boldRed.Println("\nMissing file as parameter ex: --get <file>\n")
+			os.Exit(0)
+		}
+
+		stringCmd2 = strings.Trim(value, "-")
+		stringCmd2 = strings.TrimSpace(stringCmd2)
+		FileGet = fmt.Sprintf("%s", stringCmd2)
+
+	} else {
+
+		boldRed.Println("\nMissing file as parameter ex: --get <file>\n")
+		os.Exit(0)
+	}
+
+	return FileGet
+}
+
+//
+//
+//
 func validBucket(x int, arrayParam map[int]string) string {
 
 	red := color.New(color.FgRed)
@@ -418,9 +498,11 @@ func PrintDefaults() {
    or: s3goamz --put file.pdf --bucket name-bucket [options]
    or: s3goamz --put file.pdf --bucket name-bucket --acl read [options]
    or: s3goamz --put file.pdf --bucket name-bucket --acl read --crypt
+   or: s3goamz --get file.pdf --bucket name-bucket
 
    Put and bucket arguments are required.
    -put,     --put      <file>    The file and its respective path
+   -get,     --get      <file>    The file and its respective path
    -bucket,  --bucket   <name>    Bucket name s3
    -acl,     --acl      <options> read, write, all
    -crypt,   --crypt    has no parameter

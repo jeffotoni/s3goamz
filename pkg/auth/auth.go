@@ -33,6 +33,16 @@ func (s *S) GetS3() *s3.S3 {
 	return s.s3
 }
 
+// aws.USEast
+// aws.USWest
+// aws.USWest2
+// aws.EUWest
+// aws.APSoutheast
+// aws.APSoutheast2
+// aws.APNortheast
+// aws.SAEast
+// aws.CNNorth
+
 //
 //
 //

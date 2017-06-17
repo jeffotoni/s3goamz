@@ -18,6 +18,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"math"
 	"net/http"
 	"os"
@@ -83,7 +84,7 @@ func main() {
 	//
 	//
 	//
-	var FileUpload string
+	var FileUpGet string
 
 	//
 	//
@@ -96,46 +97,9 @@ func main() {
 	var cryptInt int
 
 	//
-	// FileUpload, Bucket, stringAcl
-	//
-	FileUpload, Bucket, stringAclTmp, cryptInt = check.GenArgs()
-
-	if stringAclTmp == "read" {
-
-		stringAcl = BucketOwnerRead
-
-	} else if stringAclTmp == "write" {
-
-		stringAcl = PublicReadWrite
-
-	} else if stringAclTmp == "all" {
-
-		stringAcl = BucketOwnerFull
-	}
-
 	//
 	//
-	//
-	var lastValue string
-
-	//
-	//
-	//
-	vetSplit := strings.Split(FileUpload, "/")
-
-	//
-	//
-	//
-	sizeVet := len(vetSplit)
-
-	if sizeVet > 0 {
-
-		lastValue = vetSplit[sizeVet-1]
-
-	} else {
-
-		lastValue = FileUpload
-	}
+	var putGet string
 
 	//
 	//
@@ -145,15 +109,12 @@ func main() {
 	//
 	//
 	//
-	if cryptInt > 0 {
+	var lastValue string
 
-		strcommand = "start upload to [ --put " + lastValue + " --bucket " + Bucket + " --acl " + stringAclTmp + " --crypt ]"
-
-	} else {
-		strcommand = "start upload to [ --put " + lastValue + " --bucket " + Bucket + " --acl " + stringAclTmp + " ]"
-	}
-
-	boldYellow.Println(strcommand)
+	//
+	// FileUpGet, Bucket, stringAcl
+	//
+	FileUpGet, Bucket, stringAclTmp, cryptInt, putGet = check.GenArgs()
 
 	//
 	// GetAuth (key, secret)
@@ -180,264 +141,333 @@ func main() {
 		Name: Bucket,
 	}
 
-	//
-	// OR
-	//
-	// bucket := conn.Bucket(Bucket) // change this your bucket name
+	if putGet == "get" {
 
-	if check.Exists(FileUpload) == true {
+		strcommand = "start download to [ --get " + lastValue + " --bucket " + Bucket + "]"
 
-		var fileCrypt string
+		boldYellow.Println(strcommand)
 
-		if cryptInt == 1 {
+		dbyte, erroget := conn.Get(FileUpGet)
 
-			//
-			// File must be encrypted
-			//
+		erro.Check(erroget)
 
-			cry.Crypt(keyDefault, FileUpload)
-			fileCrypt = FileUpload + ".crypt"
+		err3 := ioutil.WriteFile("./"+FileUpGet, dbyte, 0644)
 
-			//
-			// Will have to reopen etc ...
-			//
+		erro.Check(err3)
 
-			fmt.Println("Will encrypt...", fileCrypt)
-			fmt.Println("Used key: ", keyDefault)
+		// Writing bytes to disk
 
-			FileUpload = fileCrypt
+		boldYellow.Println("Download done successfully: ", FileUpGet)
 
-			//os.Exit(0)
+		os.Exit(0)
+
+	} else {
+
+		if stringAclTmp == "read" {
+
+			stringAcl = BucketOwnerRead
+
+		} else if stringAclTmp == "write" {
+
+			stringAcl = PublicReadWrite
+
+		} else if stringAclTmp == "all" {
+
+			stringAcl = BucketOwnerFull
 		}
 
 		//
 		//
 		//
-		file, errx := os.Open(FileUpload)
-		erro.Check(errx)
-		defer file.Close()
+		if cryptInt > 0 {
 
-		//
-		//
-		//
-		fileInfo, _ := file.Stat()
-
-		//
-		//
-		//
-		fileSize := fileInfo.Size()
-
-		//
-		//
-		//
-		bytes := make([]byte, fileSize)
-
-		// read into buffer
-		buffer := bufio.NewReader(file)
-
-		//
-		//
-		//
-		_, errx = buffer.Read(bytes)
-
-		//
-		//
-		//
-		erro.Check(errx)
-
-		//
-		//
-		//
-		filetype := http.DetectContentType(bytes)
-
-		//
-		//
-		//
-		multi, err := conn.InitMulti(FileUpload, filetype, stringAcl)
-
-		//
-		//
-		//
-		erro.Check(err)
-
-		//
-		//
-		//
-		totalPartsNum := uint64(math.Ceil(float64(fileSize) / float64(fileChunk)))
-
-		//
-		//
-		//
-		parts := []s3.Part{}
-
-		//
-		//
-		//
-		HeaderPart := strings.NewReader(string(bytes))
-
-		//
-		//
-		//
-		sizeTotal := (fileSize / (1024 * 1024))
-
-		//
-		//
-		//
-		chunkPart := (fileChunk / (1024 * 1024))
-
-		go func() {
-			sc := make(chan os.Signal, 1)
-			signal.Notify(sc, os.Interrupt)
-
-			<-sc
-
-			boldRed.Println("\ncanceled!")
-			fmt.Print("\033[?25h")
-			os.Exit(0)
-		}()
-
-		fmt.Print("\033[?25l")
-
-		timer := time.Tick(time.Duration(50) * time.Millisecond)
-
-		s := []rune(`|/~\`)
-		//s := []rune(`-=*=`)
-		//s := []rune(`◐◓◑◒`)
-		i := 0
-
-		go func() {
-			for {
-
-				<-timer
-
-				fmt.Print("\r")
-				boldWhite.Print(string(s[i]))
-
-				i++
-
-				if i == len(s) {
-					i = 0
-				}
-			}
-		}()
-
-		//
-		//
-		//
-		if fileSize < fileChunk {
-
-			//
-			//
-			//
-			boldRed.Println("File Size:", fileSize, "byte")
-
-			//
-			// Use another form of putAll shipping
-			//
-			partsx, erry := multi.PutAll(file, fileChunk)
-
-			//
-			//
-			//
-			if erry != nil {
-
-				fmt.Println("Error using send with putAll: ", erry)
-				os.Exit(0)
-			}
-
-			//
-			//
-			//
-			erry = multi.Complete(partsx)
-
-			//
-			//
-			//
-			fmt.Print("\033[?25h")
-
-			//
-			//
-			//
-			boldYellow.Println("\n\nUpload completed...")
+			strcommand = "start upload to [ --put " + lastValue + " --bucket " + Bucket + " --acl " + stringAclTmp + " --crypt ]"
 
 		} else {
 
-			//
-			//
-			//
-			boldRed.Println("File Size:", fileSize, "byte", sizeTotal, "Mb", "Chunk:", chunkPart, "Mb")
+			strcommand = "start upload to [ --put " + lastValue + " --bucket " + Bucket + " --acl " + stringAclTmp + " ]"
+		}
 
-			//
-			//
-			//
-			boldYellow.Println("Uploading by Parts...")
+		boldYellow.Println(strcommand)
 
-			//
-			//
-			//
-			for i := uint64(0); i < totalPartsNum; i++ {
+		//
+		//
+		//
+		vetSplit := strings.Split(FileUpGet, "/")
 
-				<-timer
+		//
+		//
+		//
+		sizeVet := len(vetSplit)
 
-				//
-				//
-				//
-				partSize := int(math.Min(fileChunk, float64(fileSize-int64(i*fileChunk))))
+		if sizeVet > 0 {
 
-				//
-				//
-				//
-				partBuffer := make([]byte, partSize)
+			lastValue = vetSplit[sizeVet-1]
 
-				//
-				//
-				//
-				sizePart, errx2 := io.ReadFull(HeaderPart, partBuffer)
+		} else {
 
-				//
-				//
-				//
-				erro.Check(errx2)
+			lastValue = FileUpGet
+		}
+
+		//
+		// OR
+		//
+		// bucket := conn.Bucket(Bucket) // change this your bucket name
+
+		if check.Exists(FileUpGet) == true {
+
+			var fileCrypt string
+
+			if cryptInt == 1 {
 
 				//
+				// File must be encrypted
 				//
-				//
-				piece, errx3 := multi.PutPart(int(i)+1, strings.NewReader(string(partBuffer))) // write to S3 bucket part by part
+
+				cry.Crypt(keyDefault, FileUpGet)
+				fileCrypt = FileUpGet + ".crypt"
 
 				//
+				// Will have to reopen etc ...
 				//
-				//
-				erro.Check(errx3)
 
-				fmt.Print("\r")
-				//
-				//
-				//
-				boldWhite.Printf("Processing %d piece of %d and uploaded %d bytes.\n ", int(i), int(totalPartsNum), int(sizePart))
+				fmt.Println("Will encrypt...", fileCrypt)
+				fmt.Println("Used key: ", keyDefault)
 
-				//
-				//
-				//
-				parts = append(parts, piece)
+				FileUpGet = fileCrypt
+
+				//os.Exit(0)
 			}
 
 			//
 			//
 			//
-			err = multi.Complete(parts)
+			file, errx := os.Open(FileUpGet)
+			erro.Check(errx)
+			defer file.Close()
+
+			//
+			//
+			//
+			fileInfo, _ := file.Stat()
+
+			//
+			//
+			//
+			fileSize := fileInfo.Size()
+
+			//
+			//
+			//
+			bytes := make([]byte, fileSize)
+
+			// read into buffer
+			buffer := bufio.NewReader(file)
+
+			//
+			//
+			//
+			_, errx = buffer.Read(bytes)
+
+			//
+			//
+			//
+			erro.Check(errx)
+
+			//
+			//
+			//
+			filetype := http.DetectContentType(bytes)
+
+			//
+			//
+			//
+			multi, err := conn.InitMulti(FileUpGet, filetype, stringAcl)
 
 			//
 			//
 			//
 			erro.Check(err)
 
-			fmt.Print("\033[?25h")
-			boldYellow.Println("\n\nUpload completed...")
+			//
+			//
+			//
+			totalPartsNum := uint64(math.Ceil(float64(fileSize) / float64(fileChunk)))
+
+			//
+			//
+			//
+			parts := []s3.Part{}
+
+			//
+			//
+			//
+			HeaderPart := strings.NewReader(string(bytes))
+
+			//
+			//
+			//
+			sizeTotal := (fileSize / (1024 * 1024))
+
+			//
+			//
+			//
+			chunkPart := (fileChunk / (1024 * 1024))
+
+			go func() {
+				sc := make(chan os.Signal, 1)
+				signal.Notify(sc, os.Interrupt)
+
+				<-sc
+
+				boldRed.Println("\ncanceled!")
+				fmt.Print("\033[?25h")
+				os.Exit(0)
+			}()
+
+			fmt.Print("\033[?25l")
+
+			timer := time.Tick(time.Duration(50) * time.Millisecond)
+
+			s := []rune(`|/~\`)
+			//s := []rune(`-=*=`)
+			//s := []rune(`◐◓◑◒`)
+			i := 0
+
+			go func() {
+				for {
+
+					<-timer
+
+					fmt.Print("\r")
+					boldWhite.Print(string(s[i]))
+
+					i++
+
+					if i == len(s) {
+						i = 0
+					}
+				}
+			}()
+
+			//
+			//
+			//
+			if fileSize < fileChunk {
+
+				//
+				//
+				//
+				boldRed.Println("File Size:", fileSize, "byte")
+
+				//
+				// Use another form of putAll shipping
+				//
+				partsx, erry := multi.PutAll(file, fileChunk)
+
+				//
+				//
+				//
+				if erry != nil {
+
+					fmt.Println("Error using send with putAll: ", erry)
+					os.Exit(0)
+				}
+
+				//
+				//
+				//
+				erry = multi.Complete(partsx)
+
+				//
+				//
+				//
+				fmt.Print("\033[?25h")
+
+				//
+				//
+				//
+				boldYellow.Println("\n\nUpload completed...")
+
+			} else {
+
+				//
+				//
+				//
+				boldRed.Println("File Size:", fileSize, "byte", sizeTotal, "Mb", "Chunk:", chunkPart, "Mb")
+
+				//
+				//
+				//
+				boldYellow.Println("Uploading by Parts...")
+
+				//
+				//
+				//
+				for i := uint64(0); i < totalPartsNum; i++ {
+
+					<-timer
+
+					//
+					//
+					//
+					partSize := int(math.Min(fileChunk, float64(fileSize-int64(i*fileChunk))))
+
+					//
+					//
+					//
+					partBuffer := make([]byte, partSize)
+
+					//
+					//
+					//
+					sizePart, errx2 := io.ReadFull(HeaderPart, partBuffer)
+
+					//
+					//
+					//
+					erro.Check(errx2)
+
+					//
+					//
+					//
+					piece, errx3 := multi.PutPart(int(i)+1, strings.NewReader(string(partBuffer))) // write to S3 bucket part by part
+
+					//
+					//
+					//
+					erro.Check(errx3)
+
+					fmt.Print("\r")
+					//
+					//
+					//
+					boldWhite.Printf("Processing %d piece of %d and uploaded %d bytes.\n ", int(i), int(totalPartsNum), int(sizePart))
+
+					//
+					//
+					//
+					parts = append(parts, piece)
+				}
+
+				//
+				//
+				//
+				err = multi.Complete(parts)
+
+				//
+				//
+				//
+				erro.Check(err)
+
+				fmt.Print("\033[?25h")
+				boldYellow.Println("\n\nUpload completed...")
+			}
+
+		} else {
+
+			boldRed.Println("Erro, File [" + FileUpGet + "]does not exist!")
+			os.Exit(0)
 		}
-
-	} else {
-
-		boldRed.Println("Erro, File [" + FileUpload + "]does not exist!")
-		os.Exit(0)
 	}
 }
