@@ -9,32 +9,28 @@ Authentication is handled flexibly: by default, the system reads AWS credentials
 This tool is ideal for anyone dealing with big data uploads to S3—handling huge backups, video archives, VM images, or data lakes—ensuring robustness, resumability, and optimal transfer performance for files that exceed standard upload limits.
 
 
-# Example of operation
+## Example of operation
 
 ![s3goamz demo](img/s3goamz.gif)
 
-# Packages
-
+## Packages
+```bash
 go get launchpad.net/goamz/aws
-
 go get launchpad.net/goamz/s3
-
 go get github.com/fatih/color
-
 got get github.com/jeffotoni/gocry
-
 go get github.com/jeffotoni/s3goamz
+```
 
-# Install
-
+## Install
+```bash
 $ go build s3goamz.go
+$ sudo cp s3goamz /usr/local/bin
+````
 
-$ sudo cp s3goamz /usr/bin
+### help
 
-# help
-
-```go
-	
+```bash
 $ s3goamz --help
 
   Use: 
@@ -53,29 +49,22 @@ $ s3goamz --help
 
 ```
 
-# Example 1
+## Example 1
 
-```go
-
-$ s3goamz --put ~/Downloads/ex2.pdf --bucket name-bucket
-
+```bash
+s3goamz --put ~/Downloads/ex2.pdf --bucket name-bucket
 ```
 
-# Example 2 Encrypting file
+## Example 2 Encrypting file
 
-```go
-
-$ s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket --crypt
+```bash
+s3goamz -put ~/Downloads/ex2.pdf -bucket name-bucket --crypt
 
 Will encrypt... ~/Downloads/ex2.pdf.crypt
 Used key:  DKYPENJXW43SMOJCU6F5TMFVOUANMJNL
-
 ```
 
-# Example 3
-
-```go
-
-$ s3goamz --version
-
+## Example 3
+```
+gos3goamz --version
 ```
