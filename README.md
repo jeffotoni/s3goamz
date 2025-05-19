@@ -1,17 +1,17 @@
-# s3goamz
+# s3goamz – Multipart Upload for Large Files on AWS S3 (Go & goamz)
 
-Loads files to s3 aws using the goamz library.
+This project enables reliable uploading of very large files (greater than 5GB, e.g., 10GB, 15GB, or more) to Amazon S3 using the Go language and the goamz library. Since S3 has a single-object upload limit of 5GB, we leverage the multi.PutPart method to implement S3’s native multipart upload: files are split into chunks, uploaded in parallel or sequentially, and then reassembled on the server side for efficient storage.
 
-We implemented the multi.PutPart method, it will allow us to send chunks of the file to s3 aws, and in the end it joins all the parts.
+The implementation supports client-side encryption, allowing you to optionally encrypt file chunks before uploading, increasing data security at rest and in transit. You can choose to enable or disable encryption depending on your use case.
 
-The cool thing is that we will send everything cryptographed, but we may choose to encrypt the content before sending or not.
+Authentication is handled flexibly: by default, the system reads AWS credentials securely from the standard AWS credential file (~/.aws/credentials), but also supports direct key injection (not recommended for production for security reasons). For best security practices, always store credentials on disk and never hard-code them.
 
-The authentication method is done right in the code we will encapsulate to get the access keys from the default location of aws ~/.aws/credentials, and also allow the keys coming straight from the code, the latter option is very dangerous and can cause a tremendous If the keys fall into the wrong hands, we strongly suggest keeping the keys on disk.
+This tool is ideal for anyone dealing with big data uploads to S3—handling huge backups, video archives, VM images, or data lakes—ensuring robustness, resumability, and optimal transfer performance for files that exceed standard upload limits.
 
 
 # Example of operation
 
-![image](https://github.com/jeffotoni/s3goamz/blob/master/img/s3goamz.gif)
+![s3goamz demo](img/s3goamz.gif)
 
 # Packages
 
